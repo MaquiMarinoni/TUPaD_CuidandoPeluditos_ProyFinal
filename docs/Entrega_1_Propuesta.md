@@ -1,13 +1,29 @@
+<link rel="stylesheet" href="estilos.css">
+
 <div align="center">
-<h1>UNIVERSIDAD TECNOLÓGICA NACIONAL</h1>
-<h2>Entrega 1 - Propuesta de Proyecto y Repositorio</h2>
-<p><strong>Valletto, Marianela y Marinoni, Macarena</strong></p>
-<p>Tecnicatura Universitaria en Programación - Universidad Tecnológica Nacional</p>
-<p>Trabajo Final de Carrera</p>
-<p>2026</p>
+<br><br><br>
+<h1>UNIVERSIDAD TECNOLOGICA NACIONAL</h1>
+<h2>Entrega 1 - Propuesta de proyecto y pepositorio</h2>
+
+<br><br><br><br><br>
+
+<p><strong>Grupo 176</strong></p>
+<p>Valletto, Marianela &lt;maruvalletto@gmail.com&gt;</p>
+<p>Marinoni, Macarena &lt;marinonimacarena@gmail.com&gt;</p>
+
+<br><br><br><br><br>
+
+<p>Tecnicatura Universitaria en Programación</p>
+<p>Trabajo final de carrera</p>
+
+<br><br><br><br><br>
+
+<p><strong>Tutor:</strong>Londero, Oscar</p>
+<p>30/08/2026</p>
+<br><br><br>
 </div>
 
-<br>
+<div class="salto-pagina"></div>
 
 ## ÍNDICE
 - [ÍNDICE](#índice)
@@ -31,8 +47,7 @@
   - [5. Plan de trabajo preliminar](#5-plan-de-trabajo-preliminar)
 - [Parte 4: Repositorio del Proyecto](#parte-4-repositorio-del-proyecto)
 
-<div style="font-family: 'Calibri', sans-serif; font-size: 12pt; line-height: 1.5; text-align: justify;">
-
+<div class="salto-pagina"></div>
 
 ## Parte 1: Identificación del problema y propuesta de solución
 
@@ -40,7 +55,6 @@
 
 ### 1. Contexto y problema central
 Los dueños de perros y gatos en Argentina enfrentan dificultades significativas para encontrar y seleccionar cuidadores temporales adecuados. Actualmente, esta necesidad suele resolverse mediante alternativas informales, como familiares, grupos de redes sociales, mensajería o veterinarias, las cuales funcionan de manera aislada y no están diseñadas para una gestión integral. Ademas, estas alternativas pueden resolver necesidades puntuales, pero no siempre permiten conocer previamente la experiencia, disponibilidad, ubicación, servicios ofrecidos o reputación de la persona que realizará el cuidado.
-
 
 ### 2. Actores involucrados
 Para comprender el ecosistema del sistema, se identifican los siguientes actores principales:
@@ -74,6 +88,8 @@ El relevamiento del mercado actual identifica plataformas como Mascoters, Truste
 *   Modalidades de cuidado claramente identificadas (domicilio del dueño o alojamiento del cuidador).
 *   Un flujo de contratación simplificado y trazabilidad absoluta sobre los estados de las solicitudes.
 
+<div class="salto-pagina"></div>
+
 ## Parte 2: Definición del stack tecnológico
 
 **Resumen:** Se detallan y justifican las herramientas, lenguajes y frameworks seleccionados para el desarrollo del producto mínimo viable (MVP), incluyendo el diseño arquitectónico y el análisis de riesgos técnicos asociados.
@@ -99,6 +115,8 @@ Para asegurar la integridad del desarrollo, se identificaron riesgos técnicos y
 *   **Errores de autorización (acceso indebido):** Se mitigará implementando una matriz de permisos estricta y pruebas específicas para cada rol.
 *   **Exposición de credenciales:** Se evitará subiendo secretos al control de versiones, utilizando archivos de variables de entorno locales y rotando credenciales.
 *   **Limitaciones del entorno de despliegue:** Se realizará una prueba temprana de despliegue en PythonAnywhere para validar la capacidad de almacenamiento y compatibilidad.
+
+<div class="salto-pagina"></div>
 
 ## Parte 3: Plan de trabajo y alcance
 
@@ -131,10 +149,10 @@ La aceptación del Producto Mínimo Viable (MVP) estará sujeta al cumplimiento 
 ### 5. Plan de trabajo preliminar
 La ejecución del proyecto se estructurará de forma iterativa a lo largo de un estimado de 10 semanas, comenzando con la definición arquitectónica y modelo de datos (semanas 1 a 3), seguido por la implementación de usuarios y perfiles (semanas 4 a 6), desarrollo del motor de búsqueda y solicitudes (semanas 7 a 8), para concluir con las pruebas integrales, ajustes de seguridad y despliegue final (semanas 9 a 10).
 
+<div class="salto-pagina"></div>
+
 ## Parte 4: Repositorio del Proyecto
 
 **Resumen:** Enlace al repositorio único centralizado donde se alojará el código fuente, la documentación técnica y el control de versiones colaborativo de todo el proyecto.
 
 * **URL del Repositorio:** [Cuidando Peluditos](https://github.com/MaquiMarinoni/TUPaD_CuidandoPeluditos_ProyFinal.git)
-
-<div>

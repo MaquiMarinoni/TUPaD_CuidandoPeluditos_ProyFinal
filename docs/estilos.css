@@ -1,0 +1,25 @@
+/* Estilos globales*/
+body {
+    font-family: 'Calibri', sans-serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+/* Clase para forzar saltos de página en el PDF */
+.salto-pagina {
+    page-break-after: always;
+}
+
+/* Reglas específicas para la exportación a PDF*/
+@media print {
+    @page {
+        margin: 2cm !important;
+    }
+    
+    /* Excepción: elimina los márgenes SOLO en la primera página */
+    @page :first {
+        margin-top: 0cm !important;
+        margin-bottom: 0cm !important;
+    }
+}
