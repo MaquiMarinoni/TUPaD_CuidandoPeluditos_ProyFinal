@@ -3,7 +3,7 @@
 <div align="center">
 <br><br><br>
 <h1>UNIVERSIDAD TECNOLOGICA NACIONAL</h1>
-<h2>Entrega 1 - Propuesta de proyecto y pepositorio</h2>
+<h2>Entrega 1 - Propuesta de proyecto y repositorio</h2>
 
 <br><br><br><br><br>
 
