@@ -4,6 +4,9 @@
 */
 {
     "markdown-pdf.displayHeaderFooter": true,
-    "markdown-pdf.headerTemplate": "<div style=\"font-family: 'Calibri', sans-serif; font-size: 10px; width: 100%; text-align: right; padding-right: 2cm; color: #555;\">Entrega 1 | Propuesta de Proyecto y Repositorio</div>",
-    "markdown-pdf.footerTemplate": "<div style=\"font-family: 'Calibri', sans-serif; font-size: 10px; width: 100%; text-align: left; padding-left: 2cm; padding-right: 2cm; color: #555;\">Marinoni, Valletto <span style=\"float: right;\"><span class=\"pageNumber\"></span></span></div>"
+    "markdown-pdf.headerTemplate": "<div style=\"font-family: 'Calibri', sans-serif; font-size: 10px; width: 100%; text-align: right; padding-right: 2cm; color: #555;\">Entrega 2 | Diseño y Módulos</div>",
+    "markdown-pdf.footerTemplate": "<div style=\"font-family: 'Calibri', sans-serif; font-size: 10px; width: 100%; text-align: left; padding-left: 2cm; padding-right: 2cm; color: #555;\">Marinoni, Valletto <span style=\"float: right;\"><span class=\"pageNumber\"></span></span></div>",
+    "markdown-pdf.styles": [
+        "docs/estilos.css"
+    ],
 }
