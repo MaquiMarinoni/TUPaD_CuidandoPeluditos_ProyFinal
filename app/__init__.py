@@ -26,4 +26,6 @@ def create_app(config_name=None):
     def health_check():
         return {'status': 'ok', 'app': 'Cuidando Peluditos API/Web'}, 200
 
+    # Registrar modelos
+    from . import models
     return app
