@@ -1,5 +1,6 @@
+/* archivo para configurar extensiones y exportación a PDF) */
 
-/* indicamos a la extensión que active los encabezados/pies, que deje un margen de 2cm arriba y abajo para que respire el texto, y le pasamos el HTML exacto para el encabezado (alineado a la derecha) y el pie (con los apellidos a la izquierda y el número de página a la derecha utilizando la clase especial
+/* indica a la extensión que active los encabezados/pies, que deje un margen de 2cm arriba y abajo para que respire el texto, y le pasamos el HTML exacto para el encabezado (alineado a la derecha) y el pie (con los apellidos a la izquierda y el número de página a la derecha utilizando la clase especial
 */
 {
     "markdown-pdf.displayHeaderFooter": true,

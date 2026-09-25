@@ -1,3 +1,5 @@
+(Archivo util para Copilot y reglas de Mermaid)
+
 ---
 applyTo: "**"
 ---

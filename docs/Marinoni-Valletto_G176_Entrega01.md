@@ -32,6 +32,7 @@
   - [2. Actores involucrados](#2-actores-involucrados)
   - [3. Propuesta de solución y valor agregado](#3-propuesta-de-solución-y-valor-agregado)
   - [4. Validación e investigación previa](#4-validación-e-investigación-previa)
+  - [2.5 Antecedentes de investigación y validación empírica](#25-antecedentes-de-investigación-y-validación-empírica)
   - [5. Indicadores para medir el impacto](#5-indicadores-para-medir-el-impacto)
   - [6. Análisis competitivo y diferenciación](#6-análisis-competitivo-y-diferenciación)
 - [Parte 2: Definición del stack tecnológico](#parte-2-definición-del-stack-tecnológico)
@@ -71,9 +72,21 @@ La solución consiste en desarrollar "Cuidando Peluditos", una plataforma web qu
 *   Facilitar la toma de decisiones mediante valoraciones vinculadas exclusivamente a servicios finalizados.
 
 ### 4. Validación e investigación previa
-La viabilidad y relevancia de la problemática se apoyan en una investigación de Experiencia de Usuario (UX) realizada en etapas previas. Esta validación exploratoria incluyó:
-*   **Entrevistas semiestructuradas:** Realizadas a usuarios del público objetivo, confirmando la dificultad para hallar cuidadores de confianza y el estrés asociado a la alteración de las rutinas de la mascota.
-*   **Card sorting y pruebas de usabilidad:** Ejecutadas con participantes reales, logrando que el flujo diseñado sea completado exitosamente en tiempos óptimos, lo que respalda la comprensión del problema y la utilidad de la interfaz propuesta.
+### 2.5 Antecedentes de investigación y validación empírica
+
+La propuesta se sustenta en una investigación de experiencia de usuario (UX) llevada a cabo con el público objetivo en Argentina, utilizando tres técnicas complementarias:
+
+1. **Entrevistas semiestructuradas (5 participantes, 18 a 50 años):**
+   - *Hallazgos:* Dificultad recurrente para coordinar cuidados confiables fuera del círculo íntimo; reticencia hacia guarderías tradicionales por hacinamiento o estrés del animal; necesidad de mantener rutinas estrictas de alimentación/paseos y alta demanda de comunicación diaria.
+   - *Decisión de diseño:* Adopción del modelo dual de servicios (Alojamiento en hogar del cuidador vs. Visitas a domicilio) y visibilidad prioritaria de las condiciones de convivencia y rutinas de la mascota.
+
+2. **Card Sorting abierto (10 participantes):**
+   - *Hallazgos:* Los usuarios categorizaron intuitivamente los filtros de búsqueda según tres dimensiones primarias: 1) Especie y tamaño admitido, 2) Zona geográfica (provincia y localidad), y 3) Rango de fechas requeridas. La tarifa económica se agrupó como criterio de ordenamiento secundario.
+   - *Decisión de diseño:* Estructuración de la barra de búsqueda principal enfocada en especie, localidad y calendario de disponibilidad.
+
+3. **Pruebas de usabilidad exploratorias (5 participantes):**
+   - *Resultados cuantitativos:* Se evaluaron tareas críticas (búsqueda de cuidador, selección de mascota y emisión de solicitud de reserva), obteniendo una **tasa de completitud del 100%**.
+   - *Métrica de eficiencia:* El recorrido completo registró una **duración media de 54 segundos**, validando la fluidez del flujo de navegación sin fricciones operativas.
 
 ### 5. Indicadores para medir el impacto
 Para evaluar objetivamente la efectividad del Producto Mínimo Viable (MVP) y la mitigación del problema central, se definen los siguientes indicadores de éxito:
