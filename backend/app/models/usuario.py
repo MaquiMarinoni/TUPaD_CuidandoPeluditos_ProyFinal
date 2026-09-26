@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.extensions import db
+from backend.app.extensions import db
 
 class Rol(db.Model):
     __tablename__ = 'roles'

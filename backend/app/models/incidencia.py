@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.extensions import db
+from backend.app.extensions import db
 
 class Incidencia(db.Model):
     __tablename__ = 'incidencias'

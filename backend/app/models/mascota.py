@@ -1,4 +1,4 @@
-from app.extensions import db
+from backend.app.extensions import db
 
 class Mascota(db.Model):
     __tablename__ = 'mascotas'

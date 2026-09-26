@@ -1,4 +1,4 @@
-from app.extensions import db
+from backend.app.extensions import db
 
 class PerfilCuidador(db.Model):
     __tablename__ = 'perfiles_cuidadores'

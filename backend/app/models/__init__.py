@@ -1,4 +1,4 @@
-from app.extensions import login_manager
+from backend.app.extensions import login_manager
 from .usuario import Usuario, Rol
 from .perfil_cuidador import PerfilCuidador, Disponibilidad
 from .mascota import Mascota
