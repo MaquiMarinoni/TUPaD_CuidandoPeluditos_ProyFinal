@@ -101,14 +101,30 @@ erDiagram
     SOLICITUD ||--o| VALORACION : calificada_con
     SOLICITUD ||--o{ INCIDENCIA : registra
 ```
+<div style="page-break-before: always;"></div>
+
+## 5. Listado de Módulos Funcionales a Desarrollar y Priorización
+
+Para garantizar el cumplimiento de los plazos académicos y mitigar el riesgo de *scope creep*, los módulos del sistema se clasifican bajo el estándar de priorización funcional (P0: Núcleo indispensable para el MVP, P1: Funcionalidad complementaria obligatoria para cierre de ciclo, P2: Funcionalidad de extensión):
+
+| Módulo | Código / Blueprint | Prioridad | Descripción Funcional y Responsabilidad Técnica |
+| :--- | :--- | :---: | :--- |
+| **Autenticación y Perfiles** | `auth` | **P0** (Alta / MVP) | Registro de usuarios con asignación de rol (`DUENO`, `CUIDADOR`), inicio y cierre de sesión seguro mediante `Flask-Login`, hashing de contraseñas con `Werkzeug`, protección de rutas privadas y gestión de perfil. |
+| **Gestión de Mascotas** | `mascotas` | **P0** (Alta / MVP) | ABM completo de mascotas del dueño (nombre, especie, raza, tamaño, cuidados especiales y contacto veterinario). Permite asociar $N$ mascotas a un mismo usuario. |
+| **Cuidadores y Agenda** | `cuidadores` | **P0** (Alta / MVP) | Configuración del perfil del cuidador (descripción, tarifa diaria, capacidad máxima simultánea de hospedaje, especies admitidas y condiciones declaradas de convivencia). Carga de agenda de disponibilidad (fechas y modalidad). Búsqueda pública filtrada por provincia, localidad, fechas y especie (sin exponer direcciones exactas). |
+| **Solicitudes y Concurrencia** | `solicitudes` | **P0** (Alta / MVP - Núcleo) | Emisión de solicitudes multi-mascota. Implementación estricta de la máquina de estados (`PENDIENTE`, `ACEPTADA`, `RECHAZADA`, `CANCELADA`, `EN_CURSO`, `FINALIZADA`). Control atómico de concurrencia en backend con bloqueo pesimista (`with_for_update()`) para evitar sobreventa de cupos. Generación de snapshot inmutable de datos de la mascota al confirmar el servicio. Captura de autorizaciones de emergencia y topes de gastos. |
+| **Valoraciones Verificadas** | `valoraciones` | **P1** (Media) | Sistema de reputación basado en reseñas unidireccionales. Restricción estricta de una única valoración por servicio (`UNIQUE`), habilitada exclusivamente al dueño y solo cuando la solicitud pasa a estado `FINALIZADA`. Cálculo automático del puntaje promedio del cuidador. |
+| **Incidencias y Contingencias** | `incidencias` | **P1** (Media) | Protocolo de trazabilidad y registro de anomalías o imprevistos ocurridos durante la prestación del servicio (salud, conducta, edilicia o extravío). Asienta fecha/hora, descripción de los hechos, medidas inmediatas tomadas y estado de resolución (`ABIERTA`, `RESUELTA`). |
+| **Panel de Administración** | `admin` | **P2** (Baja / Post-MVP) | Supervisión general de la plataforma por parte del administrador: auditoría de incidencias reportadas, moderación y baja lógica de perfiles ante faltas a las condiciones de convivencia, y métricas operativas básicas. |
+
 
 <div style="page-break-before: always;"></div>
 
-## 5. Estructura Modular del Repositorio (Flask)
+## 6. Estructura Modular del Repositorio (Flask)
 
 Se adopta una arquitectura en capas desacopladas mediante el patrón *Application Factory* y *Blueprints* de Flask:
 
-<pre style="background: #f8fafc; border: 1px solid #cbd5e0; padding: 12px; font-family: 'Courier New', Courier, monospace; font-size: 11px; line-height: 1.45; white-space: pre; border-radius: 4px;">
+<pre style=" padding: 12px; font-family: 'Courier New', Courier, monospace; font-size: 11px; line-height: 1.45; white-space: pre; border-radius: 4px;">
 TUPaD_CuidandoPeluditos_ProyFinal/
 ├── app/
 │   ├── __init__.py               # Application Factory: create_app()
@@ -158,7 +174,7 @@ TUPaD_CuidandoPeluditos_ProyFinal/
 
 <div style="page-break-before: always;"></div>
 
-## 6. Modelado del Escenario de Prueba Integral
+## 7. Modelado del Escenario de Prueba Integral
 
 A continuación se especifica paso a paso el caso de uso complejo solicitado en la devolución docente, validando la integridad del modelo frente a condiciones de concurrencia y cambios de estado:
 
