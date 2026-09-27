@@ -1,8 +1,3 @@
--- =============================================================================
--- TRABAJO INTEGRADOR FINAL | CUIDANDO PELUDITOS (TUPaD - UTN)
--- Script DDL: Creación de Esquema de Base de Datos Relacional
--- Motor: MySQL 8.x / MariaDB 10.x (InnoDB)
--- =============================================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS incidencias;
