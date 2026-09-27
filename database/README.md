@@ -1,12 +1,12 @@
 # Base de Datos | Cuidando Peluditos
 
-En esta carpeta se encuentran los scripts formales de definición y manipulación de datos correspondientes a la **2.ª Entrega — Diseño y Módulos** de la Tecnicatura Universitaria en Programación a Distancia (TUPaD - UTN).
+En esta carpeta se encuentran los scripts formales de definición y manipulación de datos.
 
 ## Contenido de la carpeta
-* `schema.sql`: Script DDL con la creación de tablas, claves foráneas, restricciones de integridad e índices para MySQL 8.x / MariaDB.
+* `schema.sql`: Script DDL con la creación de tablas, claves foráneas, restricciones de integridad e indices.
 * `seeds.sql`: Script DML con la carga inicial obligatoria de roles (`DUENO`, `CUIDADOR`, `ADMIN`).
 
-## Instrucciones de ejecución (MySQL CLI)
+## Instrucciones de ejecución
 Para recrear la base de datos completa de forma manual, ejecutar desde la terminal:
 
 ```bash
