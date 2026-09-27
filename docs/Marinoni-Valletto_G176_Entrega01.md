@@ -126,7 +126,7 @@ Esta arquitectura es adecuada para el alcance inicial y permite una correcta esc
 ### 4. Riesgos técnicos y mitigaciones
 Para asegurar la integridad del desarrollo, se identificaron riesgos técnicos y sus correspondientes acciones de mitigación:
 *   **Errores de autorización (acceso indebido):** Se mitigará implementando una matriz de permisos estricta y pruebas específicas para cada rol.
-*   **Exposición de credenciales:** Se evitará subiendo secretos al control de versiones, utilizando archivos de variables de entorno locales y rotando credenciales.
+* **Exposición de credenciales:** Se evitará incluir secretos en el control de versiones. Se utilizarán variables de entorno locales, se excluirán de Git los archivos que contengan credenciales y se rotarán las credenciales que hayan sido expuestas.
 *   **Limitaciones del entorno de despliegue:** Se realizará una prueba temprana de despliegue en PythonAnywhere para validar la capacidad de almacenamiento y compatibilidad.
 
 <div class="salto-pagina"></div>
