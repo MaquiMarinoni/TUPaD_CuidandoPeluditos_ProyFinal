@@ -27,5 +27,5 @@ def create_app(config_name=None):
         return {'status': 'ok', 'app': 'Cuidando Peluditos API/Web'}, 200
 
     # Registrar modelos
-    from ...app import models
+    from . import models
     return app
