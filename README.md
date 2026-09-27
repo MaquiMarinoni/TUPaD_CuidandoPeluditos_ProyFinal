@@ -15,6 +15,7 @@ UNIVERSIDAD TECNOLOGICA NACIONAL
 **Docente:** Oscar Londero  
 **Estado Actual:** Entrega 02 — Diseño y Módulos
 
+
 ---
 
 </div>
@@ -23,19 +24,19 @@ UNIVERSIDAD TECNOLOGICA NACIONAL
 
 ## 1. Descripción del proyecto
 
-**Cuidando Peluditos** es una solución web integral diseñada para resolver la dificultad recurrente que enfrentan los dueños de perros y gatos para coordinar servicios de cuidado confiables (alojamiento en el hogar del cuidador o visitas a domicilio) ante viajes, compromisos laborales o imprevistos familiares.
+**Cuidando Peluditos** es un proyecto de plataforma web que busca facilitar la búsqueda y coordinación de servicios de cuidado para perros y gatos ante viajes, compromisos laborales o imprevistos. Contempla dos modalidades: alojamiento en el hogar del cuidador y visitas al domicilio del dueño.
 
-La plataforma reduce la asimetría informativa centralizando perfiles transparentes, declaraciones explícitas de convivencia, disponibilidad de agenda en tiempo real, gestión de múltiples mascotas por solicitud, control de concurrencia atómico para evitar sobreventas de cupos (*overbooking*), preservación histórica de fichas médicas mediante snapshots inmutables, protocolo de contingencias para imprevistos y valoraciones verificadas únicamente post-servicio finalizado.
+La propuesta reúne perfiles de cuidadores, condiciones de convivencia y disponibilidad para que los dueños puedan comparar alternativas y enviar solicitudes para una o varias mascotas. El diseño contempla el control de cupos para evitar reservas incompatibles, la conservación de las indicaciones de cuidado de cada servicio, el registro de incidencias y las valoraciones asociadas a servicios finalizados.
 
 ---
 
 ## 2. Documentación de entregas
 
-El repositorio concentra la totalidad de las instancias formales de evaluación del proyecto de fin de carrera:
+El repositorio reúne los informes de las entregas y la documentación del modelo de datos:
 
-* 📑 **[Entrega 01 — Propuesta de Proyecto y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md):** Identificación del problema, propuesta de valor, investigación empírica de campo (5 entrevistas semiestructuradas, card sorting con 10 participantes y pruebas de usabilidad con 54 segundos promedio de recorrido).
-* 📐 **[Entrega 02 — Diseño, DER y módulos a desarrollar](docs/Marinoni-Valletto_G176_Entrega02.md):** Marco curricular de TUPaD, reglas del dominio central en P0, máquina de estados, control transaccional de concurrencia (`with_for_update()`), esquema relacional en 3FN con diccionario de datos, listado de módulos priorizados (P0/P1/P2) y modelado del escenario de prueba integral.
-* 🗄️ **[Directorio de Base de Datos](database/):** Scripts DDL (`schema.sql`) y DML (`seeds.sql`) en MySQL InnoDB y documentación del DER en Mermaid.
+* **[Entrega 01 — Propuesta de Proyecto y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md):** Presenta el problema, la propuesta de valor y los resultados de la investigación con usuarios: cinco entrevistas semiestructuradas, un card sorting con diez participantes y pruebas de usabilidad con una duración promedio del recorrido de 54 segundos.
+* **[Entrega 02 — Diseño, DER y módulos a desarrollar](docs/Marinoni-Valletto_G176_Entrega02.md):** Describe las reglas de negocio, el modelo de datos, los estados de las solicitudes, la arquitectura, los módulos priorizados y el escenario de prueba integral.
+* **[Directorio de Base de Datos](database/):**  Contiene el script de creación de tablas (`schema.sql`), los roles iniciales (`seeds.sql`) y la documentación del diagrama entidad-relación (DER) en Mermaid.
 
 ---
 
@@ -65,19 +66,19 @@ TUPaD_CuidandoPeluditos_ProyFinal/
 │   ├── valoraciones/             # Módulo de reseñas verificadas post-servicio
 │   └── README.md                 # Documentación de la capa backend
 ├── frontend/                     # Capa de presentación (interfaz de usuario)
-│   ├── static/                   # Hojas de estilo CSS, JS cliente e imágenes
+│   ├── statics/                  # Hojas de estilo CSS, JS cliente e imágenes
 │   ├── templates/                # Plantillas Jinja2 / HTML organizadas por módulo
 │   └── README.md                 # Documentación técnica de la capa frontend
-├── database/                     # Definición y persistencia de datos relacional
+├── database/                     # Definición del modelo de datos relacional
 │   ├── schema.sql                # Script DDL formal
 │   ├── seeds.sql                 # Script DML con roles iniciales del sistema
 │   └── README.md                 # Documentación del DER 
 ├── docs/                         # Informes
-│   ├── Marinoni-Valletto_G176_Entrega01.md  # Informe entrega 01
-│   ├── Marinoni-Valletto_G176_Entrega02.md  # Informe entrega 02
-│   └── estilos.css                         # Estilos para renderizado y exportación a PDF
+│   ├── Marinoni-Valletto_G176_Entrega01.md  # Informe de la entrega 01
+│   ├── Marinoni-Valletto_G176_Entrega02.md  # Informe de la entrega 02
+│   └── estilos.css                          # Estilos para renderizado y exportación a PDF
 ├── .github/                      # Pautas de diagramas Mermaid
-├── .vscode/                      # Configuraciones de workspace
+├── .vscode/                      # Configuración del espacio de trabajo
 ├── .gitignore                    # Reglas de exclusión de Git
 └── README.md                     # Portada del repositorio
 ```
@@ -86,15 +87,15 @@ TUPaD_CuidandoPeluditos_ProyFinal/
 
 ## 5. Módulos funcionales y priorización
 
-El sistema estructura sus componentes bajo el estándar ágil de priorización (P0 = MVP Crítico, P1 = Necesario, P2 = Extensión):
+Los módulos se organizan en tres niveles de prioridad según su importancia para el alcance del proyecto: P0 (núcleo del MVP), P1 (funcionalidades complementarias obligatorias) y P2 (extensiones posteriores al MVP).
 
 * **P0 — Núcleo del MVP:**
   * `auth`: Registro, login y roles diferenciados (`DUENO`, `CUIDADOR`, `ADMIN`).
   * `mascotas`: ABM de perros y gatos asociados al dueño y sus cuidados especiales.
   * `cuidadores`: Perfil público, tarifas, condiciones declaradas de convivencia y calendario de disponibilidad.
-  * `solicitudes`: Ciclo de vida de reservas multi-mascota, snapshot inmutable de datos clínicos y control de concurrencia atómico para evitar sobrecupos.
+  * `solicitudes`: Gestión del ciclo de las solicitudes de cuidado para una o varias mascotas, conservación de las indicaciones de cuidado al crear la solicitud y control de cupos para evitar reservas incompatibles.
 * **P1 — Complementarios Obligatorios:**
-  * `valoraciones`: Calificación unidireccional (1 a 5 estrellas) con reseña, habilitada exclusivamente tras el estado `FINALIZADA` (`UNIQUE`).
+  * `valoraciones`: Calificación de 1 a 5 estrellas y comentario del dueño sobre un servicio finalizado, con una única valoración por solicitud.
   * `incidencias`: Protocolo de registro de emergencias veterinarias, conductas anómalas o extravíos durante el servicio.
 * **P2 — Extensión y Post-MVP:**
   * `admin`: Panel administrativo de moderación, auditoría de incidencias y métricas operativas.
@@ -103,6 +104,6 @@ El sistema estructura sus componentes bajo el estándar ágil de priorización (
 
 ## 6. Cumplimiento normativo (Ley N° 25.326)
 
-En concordancia con los contenidos de la asignatura *Legislación*, la plataforma implementa el principio de minimización y finalidad en el tratamiento de datos personales. Durante las búsquedas públicas y consultas de perfiles, no se divulgan números de teléfono ni domicilios exactos de dueños o cuidadores (restringiéndose a provincia y localidad general). Los datos de contacto directos se revelan única y exclusivamente a ambas partes cuando una solicitud ha sido formalmente aceptada por el cuidador.
+En relación con los contenidos de la asignatura *Legislación* y la Ley N.º 25.326, el diseño contempla limitar la exposición de datos personales. Las búsquedas públicas y los perfiles mostrarán únicamente la provincia y la localidad, sin publicar teléfonos ni domicilios exactos. Los datos de contacto y ubicación necesarios para coordinar el cuidado estarán disponibles para el dueño y el cuidador una vez aceptada la solicitud.
 
 </div>

@@ -190,7 +190,7 @@ TUPaD_CuidandoPeluditos_ProyFinal/
 │   ├── valoraciones/             # Módulo de reseñas verificadas post-servicio
 │   └── README.md                 # Documentación de la capa backend
 ├── frontend/                     # Capa de presentación (interfaz de usuario)
-│   ├── static/                   # Hojas de estilo CSS, JS cliente e imágenes
+│   ├── statics/                  # Hojas de estilo CSS, JS cliente e imágenes
 │   ├── templates/                # Plantillas Jinja2 / HTML organizadas por módulo
 │   └── README.md                 # Documentación técnica de la capa frontend
 ├── database/                     # Definición y persistencia de datos relacional
@@ -200,7 +200,7 @@ TUPaD_CuidandoPeluditos_ProyFinal/
 ├── docs/                         # Informes
 │   ├── Marinoni-Valletto_G176_Entrega01.md  # Informe entrega 01
 │   ├── Marinoni-Valletto_G176_Entrega02.md  # Informe entrega 02
-│   └── estilos.css                         # Estilos para renderizado y exportación a PDF
+│   └── estilos.css                          # Estilos para renderizado y exportación a PDF
 ├── .github/                      # Pautas de diagramas Mermaid
 ├── .vscode/                      # Configuraciones de workspace
 ├── .gitignore                    # Reglas de exclusión de Git
