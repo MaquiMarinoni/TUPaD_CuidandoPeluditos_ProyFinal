@@ -49,6 +49,9 @@ def create_app(config_name=None):
     from .visitas import visitas_bp
     app.register_blueprint(visitas_bp)
 
+    from .ui_base import ui_bp
+    app.register_blueprint(ui_bp)
+
     @app.route("/health")
     def health_check():
         return {

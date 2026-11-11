@@ -1,0 +1,12 @@
+:root { --pet-primary: #386e62; --pet-bg: #f4f7f5; }
+body { background: var(--pet-bg); color: #1f302c; }
+.btn-primary { background: var(--pet-primary); border-color: var(--pet-primary); }
+.btn-primary:hover { background: #27554b; border-color: #27554b; }
+.nav-pills .nav-link { color: var(--pet-primary); }
+.nav-pills .nav-link.active { background: var(--pet-primary); }
+.card { border: 1px solid #dce8e2; border-radius: 15px; box-shadow: 0 5px 18px #1e413008; }
+label:not(.form-check) { display: block; font-size: .92rem; font-weight: 500; }
+label input, label select, label textarea { margin-top: 4px; }
+.list-entry { padding: 12px 0; border-bottom: 1px solid #e5ebe7; }
+.list-entry:last-child { border-bottom: none; }
+.field-note { color: #61736d; font-size: .85rem; }
