@@ -62,25 +62,48 @@ def capacidad_suficiente(perfil_id, nueva_capacidad):
     return True
 
 
+
 def afecta_reserva_aceptada(disponibilidad):
     """
-    Impide alterar una franja de alojamiento
-    que se superpone con reservas ya aceptadas.
-
-    Es una regla conservadora: mientras haya una
-    reserva comprometida, no se altera esa franja.
+    Impide modificar o desactivar una disponibilidad
+    que respalda servicios aceptados futuros.
     """
-    if disponibilidad.modalidad != "ALOJAMIENTO":
+    if disponibilidad.modalidad == "ALOJAMIENTO":
+        for reserva in reservas_comprometidas(
+            disponibilidad.cuidador_id
+        ):
+            if (
+                reserva.fecha_desde < disponibilidad.fecha_hasta
+                and reserva.fecha_hasta > disponibilidad.fecha_desde
+            ):
+                return True
+
         return False
 
-    for reserva in reservas_comprometidas(
-        disponibilidad.cuidador_id
-    ):
-        if (
-            reserva.fecha_desde < disponibilidad.fecha_hasta
-            and reserva.fecha_hasta > disponibilidad.fecha_desde
-        ):
-            return True
+    if disponibilidad.modalidad == "VISITA":
+        reservas = db.session.execute(
+            select(Solicitud).where(
+                Solicitud.cuidador_id == disponibilidad.cuidador_id,
+                Solicitud.modalidad == "VISITA",
+                Solicitud.estado == "ACEPTADA",
+                Solicitud.fecha_desde >= date.today(),
+            ).with_for_update()
+        ).scalars().all()
+
+        for reserva in reservas:
+            fechas_coinciden = (
+                disponibilidad.fecha_desde
+                <= reserva.fecha_desde
+                <= disponibilidad.fecha_hasta
+            )
+
+            horarios_coinciden = (
+                disponibilidad.hora_desde < reserva.hora_hasta
+                and disponibilidad.hora_hasta > reserva.hora_desde
+            )
+
+            if fechas_coinciden and horarios_coinciden:
+                return True
 
     return False
 
