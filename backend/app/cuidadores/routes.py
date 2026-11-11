@@ -9,6 +9,10 @@ from backend.app.extensions import db
 from backend.app.models import PerfilCuidador, Usuario, Disponibilidad
 from backend.app.disponibilidades.routes import disponibilidad_a_dict
 
+from backend.app.integridad_reservas import (
+    capacidad_suficiente,
+    reservas_comprometidas,
+)
 
 
 cuidadores_bp = Blueprint(
@@ -232,25 +236,26 @@ def crear_perfil():
         "cuidador": perfil_a_dict(perfil)
     }), 201
 
-
 @cuidadores_bp.put("/mi-perfil")
 @login_required
 def editar_perfil():
     if not es_cuidador():
         return responder_error("Acceso no autorizado.", 403)
 
-    perfil = PerfilCuidador.query.filter_by(
-        usuario_id=current_user.id
-    ).first()
-
-    if perfil is None:
-        return responder_error("Perfil no encontrado.", 404)
-
     datos = request.get_json(silent=True)
     datos_validos, mensaje = validar_datos(datos)
 
     if mensaje:
         return responder_error(mensaje)
+
+    # Bloquear el perfil antes de verificar o modificar.
+    perfil = PerfilCuidador.query.filter_by(
+        usuario_id=current_user.id
+    ).with_for_update().first()
+
+    if perfil is None:
+        db.session.rollback()
+        return responder_error("Perfil no encontrado.", 404)
 
     admite_perros = datos_validos.get(
         "admite_perros", perfil.admite_perros
@@ -260,7 +265,59 @@ def editar_perfil():
     )
 
     if not admite_perros and not admite_gatos:
-        return responder_error("Debes admitir al menos una especie.")
+        db.session.rollback()
+        return responder_error(
+            "Debes admitir al menos una especie."
+        )
+
+    nueva_capacidad = datos_validos.get(
+        "capacidad_maxima",
+        perfil.capacidad_maxima
+    )
+
+    # Una reduccion no puede dejar reservas sin cupos.
+    if nueva_capacidad < perfil.capacidad_maxima:
+        if not capacidad_suficiente(
+            perfil.id, nueva_capacidad
+        ):
+            db.session.rollback()
+            return responder_error(
+                "No podes reducir la capacidad porque "
+                "existen reservas aceptadas.",
+                409
+            )
+
+    # Tampoco se puede dejar de admitir una especie
+    # que ya tiene reservas futuras comprometidas.
+    cambia_especies = (
+        admite_perros != perfil.admite_perros
+        or admite_gatos != perfil.admite_gatos
+    )
+
+    if cambia_especies:
+        reservas = reservas_comprometidas(perfil.id)
+
+        for reserva in reservas:
+            for mascota in reserva.mascotas_asociadas:
+                if (
+                    mascota.especie_snapshot == "PERRO"
+                    and not admite_perros
+                ):
+                    db.session.rollback()
+                    return responder_error(
+                        "Hay reservas aceptadas con perros.",
+                        409
+                    )
+
+                if (
+                    mascota.especie_snapshot == "GATO"
+                    and not admite_gatos
+                ):
+                    db.session.rollback()
+                    return responder_error(
+                        "Hay reservas aceptadas con gatos.",
+                        409
+                    )
 
     for campo, valor in datos_validos.items():
         setattr(perfil, campo, valor)

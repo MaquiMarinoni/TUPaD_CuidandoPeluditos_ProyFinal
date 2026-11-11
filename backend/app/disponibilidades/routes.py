@@ -7,6 +7,9 @@ from flask_login import current_user, login_required
 from backend.app.extensions import db
 from backend.app.models import Disponibilidad, PerfilCuidador
 
+from backend.app.integridad_reservas import (
+    afecta_reserva_aceptada,
+)
 
 disponibilidades_bp = Blueprint(
     "disponibilidades",
@@ -298,9 +301,19 @@ def editar_disponibilidad(disponibilidad_id):
         activo=True
     ).first()
 
+
+    # De esta forma, primero comprobamos que la disponibilidad existe y pertenece al cuidador y luego verificamos si hay reservas comprometidas.
     if registro is None:
         db.session.rollback()
         return error("Disponibilidad no encontrada.", 404)
+
+    if afecta_reserva_aceptada(registro):
+        db.session.rollback()
+        return error(
+            "No podes modificar fechas que respaldan "
+            "reservas aceptadas.",
+            409
+        )
 
     entrada = request.get_json(silent=True)
 
@@ -375,6 +388,14 @@ def desactivar_disponibilidad(disponibilidad_id):
     if registro is None:
         db.session.rollback()
         return error("Disponibilidad no encontrada.", 404)
+
+    if afecta_reserva_aceptada(registro):
+        db.session.rollback()
+        return error(
+            "No podes desactivar esta disponibilidad "
+            "porque existen reservas aceptadas.",
+            409
+        )
 
     registro.activo = False
     db.session.commit()
