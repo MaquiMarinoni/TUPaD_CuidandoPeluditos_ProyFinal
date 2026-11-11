@@ -37,6 +37,9 @@ def create_app(config_name=None):
     from .mascotas import mascotas_bp
     app.register_blueprint(mascotas_bp)
 
+    from .cuidadores import cuidadores_bp
+    app.register_blueprint(cuidadores_bp)
+
     @app.route("/health")
     def health_check():
         return {
