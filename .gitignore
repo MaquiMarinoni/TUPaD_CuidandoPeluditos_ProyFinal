@@ -2,8 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+
+# Entornos virtuales
+.venv/
 venv/
+
+# Variables de entorno y credenciales
 .env
+.env.*
 
 # Flask / SQLite
 instance/
@@ -12,3 +19,6 @@ instance/
 
 # VS Code temporales
 .DS_Store
+
+# Permitir el archivo de ejemplo
+!.env.example
