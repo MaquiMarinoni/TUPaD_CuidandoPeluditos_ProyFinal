@@ -6,7 +6,9 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 
 from backend.app.extensions import db
-from backend.app.models import PerfilCuidador, Usuario
+from backend.app.models import PerfilCuidador, Usuario, Disponibilidad
+from backend.app.disponibilidades.routes import disponibilidad_a_dict
+
 
 
 cuidadores_bp = Blueprint(
@@ -285,3 +287,31 @@ def obtener_cuidador(cuidador_id):
         return responder_error("Cuidador no encontrado.", 404)
 
     return jsonify({"cuidador": perfil_a_dict(perfil)}), 200
+
+@cuidadores_bp.get("/<int:cuidador_id>/disponibilidades")
+def disponibilidades_publicas(cuidador_id):
+    perfil = PerfilCuidador.query.join(
+        Usuario,
+        PerfilCuidador.usuario_id == Usuario.id
+    ).filter(
+        PerfilCuidador.id == cuidador_id,
+        Usuario.activo.is_(True)
+    ).first()
+
+    if perfil is None:
+        return responder_error("Cuidador no encontrado.", 404)
+
+    registros = Disponibilidad.query.filter_by(
+        cuidador_id=perfil.id,
+        activo=True
+    ).order_by(
+        Disponibilidad.fecha_desde,
+        Disponibilidad.hora_desde
+    ).all()
+
+    return jsonify({
+        "cuidador_id": perfil.id,
+        "disponibilidades": [
+            disponibilidad_a_dict(d) for d in registros
+        ]
+    }), 200

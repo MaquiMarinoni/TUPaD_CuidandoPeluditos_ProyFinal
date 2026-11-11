@@ -40,6 +40,9 @@ def create_app(config_name=None):
     from .cuidadores import cuidadores_bp
     app.register_blueprint(cuidadores_bp)
 
+    from .disponibilidades import disponibilidades_bp
+    app.register_blueprint(disponibilidades_bp)
+
     @app.route("/health")
     def health_check():
         return {
