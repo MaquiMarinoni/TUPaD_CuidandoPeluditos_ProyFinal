@@ -1,0 +1,45 @@
+<section id="tab-inicio" class="page-section" aria-labelledby="titulo-inicio">
+  <div class="hero hero-editorial">
+    <div class="hero-copy">
+      <span class="eyebrow">CERCA TUYO, CERCA DE ELLOS</span>
+      <h1 id="titulo-inicio" tabindex="-1">Su bienestar.<br><span>Tu tranquilidad.</span></h1>
+      <p>Encontrá a alguien que cuide a tu mascota con el cariño que se merece, mientras vos seguís con tus planes.</p>
+      <div class="d-flex flex-wrap gap-3"><a href="#cuidadores" class="btn btn-primary btn-lg">Encontrar un cuidador <span aria-hidden="true">↗</span></a><a href="#cuenta" class="btn btn-light btn-lg" data-guest>Quiero ser cuidador</a></div>
+      <p class="hero-note">Alojamiento y visitas a domicilio para perros y gatos.</p>
+    </div>
+    <div class="hero-photo"><img src="{{ url_for('ui_base.demo_assets', nombre='img/perrofeliz.jpg') }}" alt="Un perro en primer plano jugando con una pelota al aire libre" width="600" height="600" fetchpriority="high"><div class="photo-caption"><span aria-hidden="true">♡</span> Un cuidado que se siente como en casa</div></div>
+  </div>
+  <section class="home-search-panel" aria-label="Buscá el cuidado que necesitás">
+    <form id="form-inicio" class="home-search" aria-label="Encontrar un cuidador">
+      <fieldset class="service-choice"><legend class="visually-hidden">Tipo de cuidado</legend>
+        <label><input type="radio" name="modalidad" value="ALOJAMIENTO" checked><span><span aria-hidden="true">⌂</span> Alojamiento</span></label>
+        <label><input type="radio" name="modalidad" value="VISITA"><span><span aria-hidden="true">♡</span> Visitas a domicilio</span></label>
+      </fieldset>
+      <div class="search-fields">
+        <fieldset class="search-group location-group"><legend>¿Dónde?</legend><div class="location-fields"><label class="visually-hidden" for="inicio-provincia">Provincia</label><input id="inicio-provincia" name="provincia" placeholder="Provincia" maxlength="60"><label class="visually-hidden" for="inicio-localidad">Localidad</label><input id="inicio-localidad" name="localidad" placeholder="Localidad" maxlength="60"></div></fieldset>
+        <fieldset class="search-group dates-group"><legend>Fechas <span class="field-note">(opcional)</span></legend><div class="date-fields"><label><span id="inicio-desde-texto">Desde</span><input name="fecha_desde" type="date" aria-describedby="inicio-error-fechas"></label><label id="inicio-hasta-label">Hasta<input name="fecha_hasta" type="date" aria-describedby="inicio-error-fechas"></label></div></fieldset>
+        <div class="search-group species-group"><label for="inicio-especie">Tu mascota</label><select id="inicio-especie" name="especie"><option value="">Perro o gato</option><option value="PERRO">Perro</option><option value="GATO">Gato</option></select></div>
+        <button class="btn btn-search" type="submit">Buscar cuidador</button>
+      </div>
+      <p id="inicio-error-fechas" class="search-error" role="alert" hidden></p>
+    </form>
+  </section>
+  <section id="como-funciona" aria-labelledby="titulo-como"><div class="section-heading"><div><span class="eyebrow">SIMPLE, DE PRINCIPIO A FIN</span><h2 id="titulo-como" tabindex="-1">Un buen cuidado empieza acá</h2></div><p>Vos elegís. Ellos reciben cariño.</p></div>
+  <div class="steps-grid">
+    <article class="step-card"><span class="step-number">01</span><h3>Conocé a los cuidadores</h3><p>Explorá su perfil, las especies que reciben y sus fechas disponibles.</p></article>
+    <article class="step-card"><span class="step-number">02</span><h3>Contanos qué necesitás</h3><p>Elegí alojamiento o visita, las fechas y las mascotas que necesitan cuidado.</p></article>
+    <article class="step-card"><span class="step-number">03</span><h3>Seguí tu solicitud</h3><p>Consultá la respuesta del cuidador y el estado del servicio en tu cuenta.</p></article>
+  </div>
+  </section>
+  <div class="services-banner"><div><span class="eyebrow">CADA MASCOTA, SU FORMA DE CUIDADO</span><h2>Una estadía o una visita.<br>Siempre, buena compañía.</h2></div><div><h3>Alojamiento</h3><p>Tu mascota se queda con un cuidador. Tarifa por mascota y noche.</p><h3>Visita a domicilio</h3><p>El cuidador visita tu hogar en el día y horario acordados. Tarifa por turno.</p></div></div>
+
+  <section id="ayuda" class="home-help" aria-labelledby="titulo-ayuda">
+    <div class="faq-intro"><span class="eyebrow">ESTAMOS PARA ORIENTARTE</span><h2 id="titulo-ayuda" tabindex="-1">¿Te quedaron <br>dudas?</h2><p>Lo que necesitás saber antes de organizar su próximo cuidado.</p></div>
+    <div class="faq-list">
+      <details><summary>¿Enviar una solicitud confirma el cuidado?<span class="faq-toggle" aria-hidden="true"></span></summary><div class="faq-answer"><p>No. Tu solicitud queda pendiente hasta que el cuidador la acepte. Antes de confirmar, el sistema comprueba la disponibilidad y el cupo.</p></div></details>
+      <details><summary>¿Qué diferencia hay entre alojamiento y visita?<span class="faq-toggle" aria-hidden="true"></span></summary><div class="faq-answer"><p>En alojamiento, tu mascota se queda con el cuidador y la tarifa se calcula por mascota y noche. En una visita, el cuidador va a tu domicilio en el horario acordado y la tarifa es por turno.</p></div></details>
+      <details><summary>¿Necesito una cuenta para buscar cuidadores?<span class="faq-toggle" aria-hidden="true"></span></summary><div class="faq-answer"><p>Podés explorar perfiles y disponibilidad sin ingresar. Para registrar mascotas y enviar solicitudes necesitás una cuenta de dueño.</p></div></details>
+      <details><summary>¿Puedo cancelar una solicitud?<span class="faq-toggle" aria-hidden="true"></span></summary><div class="faq-answer"><p>Como dueño podés cancelar una solicitud pendiente. Si ya fue aceptada, podés cancelarla antes de que comience el servicio. Encontrás la acción en Mis solicitudes.</p></div></details>
+    </div>
+  </section>
+</section>

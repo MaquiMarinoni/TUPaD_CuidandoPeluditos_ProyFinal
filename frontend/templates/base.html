@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9B63BF">
+  <title>Cuidando Peluditos | Cuidado con cariño</title>
+  <link href="{{ url_for('ui_base.demo_assets', nombre='vendor/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('ui_base.demo_assets', nombre='css/base.css') }}" rel="stylesheet">
+  <script defer src="{{ url_for('ui_base.demo_assets', nombre='js/app.js') }}"></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Ir al contenido</a>
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="#inicio" aria-label="Cuidando Peluditos, inicio"><img class="brand-logo" src="{{ url_for('ui_base.demo_assets', nombre='img/brand/logo-cuidando-peluditos.png') }}" alt="Cuidando Peluditos" width="340" height="153"></a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#cuidadores" data-tab="cuidadores">Encontrar cuidadores</a><a href="#como-funciona" data-home-anchor="como-funciona">Cómo funciona</a><a href="#ayuda" data-home-anchor="ayuda">Ayuda</a>
+      <a href="#mascotas" data-tab="mascotas" data-role="DUENO" hidden>Mis mascotas</a>
+      <a href="#agenda" data-tab="agenda" data-role="CUIDADOR" hidden>Mi perfil y agenda</a>
+      <a href="#solicitudes" data-tab="solicitudes" data-auth hidden>Mis solicitudes</a>
+    </nav>
+    <div class="session-nav"><a class="access-link" href="#cuenta" id="acceso">Ingresar</a><a class="btn btn-primary btn-sm" href="#cuenta" id="crear-cuenta" data-guest>Crear cuenta</a><span id="usuario-actual" class="small" hidden></span><button id="salir" class="btn btn-outline-primary btn-sm" hidden>Cerrar sesión</button></div>
+  </div></header>
+  <main id="contenido" class="container main-content">
+    <div id="mensaje" class="alert d-none" role="status" aria-live="polite" tabindex="-1"></div>
+    <noscript><p class="alert alert-warning">Activá JavaScript para iniciar sesión y gestionar servicios.</p></noscript>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><div class="container d-flex flex-wrap justify-content-between gap-3"><div class="footer-brand"><svg class="footer-paw" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="17" cy="20" rx="7" ry="10" transform="rotate(-25 17 20)"/><ellipse cx="31" cy="13" rx="7" ry="10"/><ellipse cx="46" cy="19" rx="7" ry="10" transform="rotate(25 46 19)"/><ellipse cx="53" cy="33" rx="6" ry="8" transform="rotate(40 53 33)"/><path d="M13 45c0-9 12-21 20-21s20 12 20 21c0 14-13 8-20 8s-20 6-20-8Z"/></svg><div><strong>Cuidando Peluditos</strong><p class="mb-0 small">Un cuidado pensado para ellos. Tranquilidad para vos.</p></div></div><p class="small mb-0">Proyecto académico · UTN TUPaD · 2026<br>Marinoni · Valletto</p></div></footer>
+  <dialog id="confirmacion" class="confirm-dialog" aria-labelledby="confirmacion-titulo"><form method="dialog"><h2 id="confirmacion-titulo" class="h4">Confirmar acción</h2><p id="confirmacion-texto"></p><div class="d-flex gap-2 justify-content-end"><button class="btn btn-outline-primary" value="cancelar">Volver</button><button class="btn btn-primary" value="confirmar">Confirmar</button></div></form></dialog>
+</body>
+</html>

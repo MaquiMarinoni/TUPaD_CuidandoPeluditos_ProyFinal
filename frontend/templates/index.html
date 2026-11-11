@@ -1,44 +1,9 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cuidando Peluditos | Base funcional</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/demo-assets/css/base.css" rel="stylesheet">
-  <script defer src="/demo-assets/js/app.js"></script>
-</head>
-<body>
-  <header class="py-3 border-bottom bg-white sticky-top">
-    <div class="container d-flex flex-wrap gap-3 justify-content-between align-items-center">
-      <div><span class="fs-4 fw-bold">🐾 Cuidando Peluditos</span><div class="small text-secondary">Prototipo funcional de integración</div></div>
-      <div class="d-flex gap-2 align-items-center"><span id="usuario-actual" class="small text-secondary">Sin sesión</span><button id="salir" class="btn btn-outline-secondary btn-sm d-none">Cerrar sesión</button></div>
-    </div>
-  </header>
-  <main class="container py-4">
-    <div id="mensaje" class="alert d-none" role="status" aria-live="polite"></div>
-    <nav class="nav nav-pills gap-2 flex-wrap mb-4" aria-label="Secciones">
-      <button type="button" class="nav-link active" data-tab="cuenta">Cuenta</button>
-      <button type="button" class="nav-link" data-tab="mascotas">Mascotas</button>
-      <button type="button" class="nav-link" data-tab="cuidadores">Cuidadores</button>
-      <button type="button" class="nav-link" data-tab="agenda">Mi agenda</button>
-      <button type="button" class="nav-link" data-tab="solicitudes">Solicitudes</button>
-    </nav>
-    <section id="tab-cuenta" class="tab-pane">
-      <div class="row g-4">
-        <div class="col-lg-5"><div class="card p-4 h-100"><h2 class="h5">Iniciar sesión</h2>
-          <form id="form-login" class="vstack gap-2"><label>Email<input class="form-control" name="email" type="email" required></label><label>Contraseña<input class="form-control" name="password" type="password" required></label><button class="btn btn-primary mt-2">Ingresar</button></form>
-        </div></div>
-        <div class="col-lg-7"><div class="card p-4"><h2 class="h5">Crear usuario de prueba</h2>
-          <form id="form-register" class="row g-2"><div class="col-md-6"><label>Nombre<input class="form-control" name="nombre" required maxlength="60"></label></div><div class="col-md-6"><label>Apellido<input class="form-control" name="apellido" required maxlength="60"></label></div><div class="col-md-6"><label>Email<input class="form-control" name="email" type="email" required></label></div><div class="col-md-6"><label>Contraseña<input class="form-control" name="password" type="password" minlength="8" required></label></div><div class="col-md-6"><label>Teléfono<input class="form-control" name="telefono" required></label></div><div class="col-md-6"><label>Rol<select name="rol" class="form-select"><option value="DUENO">Dueño</option><option value="CUIDADOR">Cuidador</option></select></label></div><div class="col-md-6"><label>Provincia<input class="form-control" name="provincia" value="Santa Fe" required></label></div><div class="col-md-6"><label>Localidad<input class="form-control" name="localidad" value="Santa Fe" required></label></div><div class="col-12"><button class="btn btn-outline-primary mt-2">Registrarme</button></div></form>
-        </div></div>
-      </div>
-    </section>
-    <section id="tab-mascotas" class="tab-pane d-none"><div class="row g-4"><div class="col-lg-5"><div class="card p-4"><h2 class="h5">Agregar mascota</h2><form id="form-mascota" class="vstack gap-2"><label>Nombre<input name="nombre" class="form-control" required></label><label>Especie<select name="especie" class="form-select"><option value="PERRO">Perro</option><option value="GATO">Gato</option></select></label><label>Tamaño<select name="tamano" class="form-select"><option value="CHICO">Chico</option><option value="MEDIANO">Mediano</option><option value="GRANDE">Grande</option></select></label><label>Cuidados especiales<textarea name="cuidados_especiales" class="form-control"></textarea></label><button class="btn btn-primary">Guardar mascota</button></form></div></div><div class="col-lg-7"><div class="card p-4"><div class="d-flex justify-content-between"><h2 class="h5">Mis mascotas</h2><button id="recargar-mascotas" class="btn btn-sm btn-outline-primary">Actualizar</button></div><div id="lista-mascotas" class="mt-3">Iniciá sesión como dueño.</div></div></div></div></section>
-    <section id="tab-cuidadores" class="tab-pane d-none"><div class="card p-4 mb-3"><h2 class="h5">Buscar cuidadores</h2><form id="form-buscar" class="row g-2 align-items-end"><div class="col-md-5"><label>Provincia<input class="form-control" name="provincia" placeholder="Opcional"></label></div><div class="col-md-5"><label>Localidad<input class="form-control" name="localidad" placeholder="Opcional"></label></div><div class="col-md-2"><button class="btn btn-primary w-100">Buscar</button></div></form></div><div id="lista-cuidadores" class="row g-3"></div><div id="detalle-cuidador" class="card p-4 mt-3 d-none"></div></section>
-    <section id="tab-agenda" class="tab-pane d-none"><div class="row g-4"><div class="col-lg-6"><div class="card p-4"><h2 class="h5">Mi perfil de cuidador</h2><form id="form-perfil" class="vstack gap-2"><label>Descripción<textarea class="form-control" name="descripcion"></textarea></label><label>Capacidad máxima<input class="form-control" name="capacidad_maxima" type="number" min="1" max="20" value="2" required></label><label>Tarifa por mascota y noche<input class="form-control" name="tarifa_diaria" type="number" min="0.01" step="0.01" value="100" required></label><label>Tarifa por visita<input class="form-control" name="tarifa_visita" type="number" min="0.01" step="0.01" value="80"></label><label class="form-check"><input class="form-check-input" type="checkbox" name="admite_perros" checked> Admito perros</label><label class="form-check"><input class="form-check-input" type="checkbox" name="admite_gatos" checked> Admito gatos</label><button class="btn btn-primary">Guardar perfil</button></form></div></div><div class="col-lg-6"><div class="card p-4"><h2 class="h5">Publicar disponibilidad</h2><form id="form-agenda" class="vstack gap-2"><label>Modalidad<select name="modalidad" class="form-select"><option value="ALOJAMIENTO">Alojamiento</option><option value="VISITA">Visita</option></select></label><label>Desde<input name="fecha_desde" type="date" class="form-control" required></label><label>Hasta<input name="fecha_hasta" type="date" class="form-control" required></label><label>Hora desde (solo visitas)<input name="hora_desde" type="time" class="form-control"></label><label>Hora hasta (solo visitas)<input name="hora_hasta" type="time" class="form-control"></label><button class="btn btn-primary">Publicar</button></form><hr><h3 class="h6">Mis disponibilidades</h3><div id="mis-disponibilidades">Iniciá sesión como cuidador.</div></div></div></div></section>
-    <section id="tab-solicitudes" class="tab-pane d-none"><div class="row g-4"><div class="col-lg-6"><div class="card p-4"><h2 class="h5">Crear alojamiento o visita</h2><form id="form-solicitud" class="vstack gap-2"><label>Cuidador<select id="select-cuidador" name="cuidador_id" class="form-select" required></select></label><label>Modalidad<select name="modalidad" class="form-select"><option value="ALOJAMIENTO">Alojamiento</option><option value="VISITA">Visita</option></select></label><label>Mis mascotas (podés seleccionar varias)<select id="select-mascotas" class="form-select" multiple size="4" required></select></label><label>Fecha ingreso / fecha visita<input name="fecha_desde" class="form-control" type="date" required></label><label>Fecha salida (solo alojamiento)<input name="fecha_hasta" class="form-control" type="date"></label><label>Hora inicio (solo visita)<input name="hora_desde" class="form-control" type="time"></label><label>Hora fin (solo visita)<input name="hora_hasta" class="form-control" type="time"></label><label>Dirección del servicio (solo visita)<input name="direccion_servicio" class="form-control" maxlength="120"></label><label>Contacto emergencia<input name="contacto_emergencia" class="form-control" required></label><label>Veterinario emergencia<input name="veterinario_emergencia" class="form-control"></label><label class="form-check"><input name="autorizacion_urgencia" class="form-check-input" type="checkbox"> Autorizo urgencias</label><label>Límite de gastos (si autorizás)<input name="limite_gastos_urgencia" class="form-control" type="number" min="0.01" step="0.01"></label><button class="btn btn-primary">Enviar solicitud</button></form></div></div><div class="col-lg-6"><div class="card p-4"><div class="d-flex justify-content-between"><h2 class="h5">Solicitudes</h2><button id="recargar-solicitudes" class="btn btn-sm btn-outline-primary">Actualizar</button></div><div id="lista-solicitudes" class="mt-3">Iniciá sesión para consultar.</div></div></div></div></section>
-    <footer class="mt-5 pt-3 border-top small text-secondary">Prototipo académico · Los formularios y mensajes se conectan con la API real de Flask. No usar datos personales reales para pruebas.</footer>
-  </main>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+{% include "inicio.html" %}
+{% include "cuenta.html" %}
+{% include "mascotas.html" %}
+{% include "cuidadores.html" %}
+{% include "agenda.html" %}
+{% include "solicitudes.html" %}
+{% endblock %}
