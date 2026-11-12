@@ -68,3 +68,7 @@ Se incorporó la cancelación de reservas aceptadas por el cuidador antes del in
 ## Retiro e ingreso de alojamiento el mismo día
 
 Prueba ejecutada sobre MariaDB: con capacidad 1 se aceptaron dos reservas consecutivas y se impidió una tercera con superposición real. Estados consultados antes de cancelar las tres solicitudes de prueba: [Registro de recambio de alojamiento](pruebas-recambio-alojamiento-2026-11-12.md).
+
+## Ocupación por noche con solapamientos parciales
+
+Con capacidad 2 se aceptaron A y B consecutivas y C que abarca ambos tramos. D se bloqueó por sobrecupo real; los estados se consultaron antes de cancelar los cuatro casos. Ejecución sobre MariaDB: [Registro de cupos parciales](pruebas-cupos-parciales-2026-11-12.md).
