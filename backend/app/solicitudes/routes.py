@@ -342,6 +342,21 @@ def solicitud_a_dict(solicitud):
 
     Sirve tanto para alojamiento como para visitas.
     """
+    # Los datos de contacto y cuidados detallados son privados.
+    # El dueno los ve siempre; el cuidador solo al aceptar el servicio.
+    mostrar_privados = (
+        current_user.is_authenticated
+        and current_user.activo
+        and (
+            current_user.id == solicitud.dueno_id
+            or (
+                solicitud.estado in ("ACEPTADA", "FINALIZADA")
+                and current_user.es_cuidador()
+                and solicitud.cuidador_perfil.usuario_id == current_user.id
+            )
+        )
+    )
+
     return {
         "id": solicitud.id,
         "dueno_id": solicitud.dueno_id,
@@ -362,7 +377,7 @@ def solicitud_a_dict(solicitud):
             else None
         ),
 
-        "direccion_servicio": solicitud.direccion_servicio,
+        "direccion_servicio": (solicitud.direccion_servicio if mostrar_privados else None),
 
         "noches": (
             (solicitud.fecha_hasta - solicitud.fecha_desde).days
@@ -379,13 +394,13 @@ def solicitud_a_dict(solicitud):
             else None
         ),
 
-        "contacto_emergencia": solicitud.contacto_emergencia,
-        "veterinario_emergencia": solicitud.veterinario_emergencia,
+        "contacto_emergencia": (solicitud.contacto_emergencia if mostrar_privados else None),
+        "veterinario_emergencia": (solicitud.veterinario_emergencia if mostrar_privados else None),
         "autorizacion_urgencia": solicitud.autorizacion_urgencia,
 
         "limite_gastos_urgencia": (
             str(solicitud.limite_gastos_urgencia)
-            if solicitud.limite_gastos_urgencia is not None
+            if mostrar_privados and solicitud.limite_gastos_urgencia is not None
             else None
         ),
 
@@ -394,8 +409,8 @@ def solicitud_a_dict(solicitud):
                 "id": item.mascota_id,
                 "nombre": item.nombre_snapshot,
                 "especie": item.especie_snapshot,
-                "cuidados_especiales": item.cuidados_snapshot,
-                "contacto_veterinario": item.veterinario_snapshot,
+                "cuidados_especiales": (item.cuidados_snapshot if mostrar_privados else None),
+                "contacto_veterinario": (item.veterinario_snapshot if mostrar_privados else None),
             }
             for item in solicitud.mascotas_asociadas
         ],
