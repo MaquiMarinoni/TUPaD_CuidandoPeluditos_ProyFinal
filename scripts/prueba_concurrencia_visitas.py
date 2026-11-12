@@ -10,10 +10,12 @@ from urllib.request import (
     build_opener,
 )
 import json
+import os
 import uuid
 
 
-BASE = "http://127.0.0.1:5000"
+# Permite elegir la instancia local sin cambiar la prueba.
+BASE = os.environ.get("PELUDITOS_TEST_URL", "http://127.0.0.1:5000").rstrip("/")
 PASSWORD = "PruebaLocal2026!"
 fallas = 0
 
