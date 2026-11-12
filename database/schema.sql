@@ -1,3 +1,8 @@
+-- ARCHIVO HISTORICO DE ENTREGA 2: NO USAR PARA INSTALAR LA VERSION ACTUAL.
+-- El esquema vigente se administra con backend/migrations/.
+-- Instrucciones: database/README.md y docs/ejecucion-local-mariadb.md.
+-- Este archivo conserva el diseno original y contiene DROP TABLE (elimina datos).
+
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS incidencias;

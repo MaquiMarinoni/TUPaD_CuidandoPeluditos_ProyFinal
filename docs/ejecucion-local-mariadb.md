@@ -118,3 +118,11 @@ Los scripts generan datos ficticios; algunos dejan reservas de prueba aceptadas.
 ```
 
 Resultados y alcance: [pruebas de MariaDB](pruebas-mariadb.md). El caso aislado de SQLite no sustituye la validación de finalización positiva en MariaDB.
+
+## Configuración de ejemplo y esquema vigente
+
+El archivo [`.env.example`](../.env.example) enumera las variables necesarias sin incluir credenciales reales. El bloque de PowerShell de esta guía sigue siendo válido y no requiere crear `.env`.
+
+Como alternativa para Flask CLI, copiar `.env.example` a `.env` y completar los valores localmente. Flask CLI carga ese archivo con `python-dotenv`; los scripts `python -m scripts.*` requieren las variables configuradas en su terminal. Las variables de la terminal tienen prioridad sobre `.env`.
+
+Las migraciones son el único procedimiento vigente para crear o actualizar las tablas. `database/schema.sql` es un antecedente histórico de Entrega 2 y no se ejecuta en este procedimiento. Consultar [Base de datos](../database/README.md).

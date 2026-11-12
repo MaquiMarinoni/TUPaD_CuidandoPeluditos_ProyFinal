@@ -49,13 +49,14 @@ El repositorio reúne los informes de las entregas y la documentación del model
 
 * **[Entrega 01 — Propuesta de Proyecto y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md):** Presenta el problema, la propuesta de valor y los resultados de la investigación con usuarios: cinco entrevistas semiestructuradas, un card sorting con diez participantes y pruebas de usabilidad con una duración promedio del recorrido de 54 segundos.
 * **[Entrega 02 — Diseño, DER y módulos a desarrollar](docs/Marinoni-Valletto_G176_Entrega02.md):** Describe las reglas de negocio, el modelo de datos, los estados de las solicitudes, la arquitectura, los módulos priorizados y el escenario de prueba integral.
-* **[Directorio de Base de Datos](database/):**  Contiene el script de creación de tablas (`schema.sql`), los roles iniciales (`seeds.sql`) y la documentación del diagrama entidad-relación (DER) en Mermaid.
+* **[Directorio de Base de Datos](database/):**  Documenta las migraciones vigentes, los roles iniciales y el diagrama de entidades. `schema.sql` se conserva únicamente como antecedente histórico de Entrega 2 y no se utiliza para reconstruir la aplicación actual.
 
 ---
 
 ## Ejecución local y pruebas de implementación
 
 - [Guía de ejecución local con MariaDB en Windows](docs/ejecucion-local-mariadb.md).
+- [Variables de entorno de ejemplo](.env.example) y [procedimiento vigente de base de datos](database/README.md).
 - [Pruebas manuales del frontend en SQLite](docs/pruebas-manuales-frontend.md).
 - [Integración y concurrencia en MariaDB](docs/pruebas-mariadb.md).
 
@@ -93,7 +94,7 @@ TUPaD_CuidandoPeluditos_ProyFinal/
 │   ├── templates/                # Plantillas Jinja2 / HTML organizadas por módulo
 │   └── README.md                 # Documentación técnica de la capa frontend
 ├── database/                     # Definición del modelo de datos relacional
-│   ├── schema.sql                # Script DDL formal
+│   ├── schema.sql                # Antecedente histórico de Entrega 2
 │   ├── seeds.sql                 # Script DML con roles iniciales del sistema
 │   └── README.md                 # Documentación del DER 
 ├── docs/                         # Informes

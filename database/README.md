@@ -1,80 +1,38 @@
-# Base de Datos | Cuidando Peluditos
+# Base de datos de Cuidando Peluditos
 
-En esta carpeta se encuentran los scripts para crear la estructura de la base de datos de **Cuidando Peluditos** y cargar los roles iniciales del sistema.
+## Estructura vigente
 
-## Contenido de la carpeta
-* `schema.sql`: Script de definición de datos (DDL) que crea las tablas, claves foráneas, restricciones de integridad e índices. Antes de crearlas, elimina las tablas existentes del proyecto y sus datos.
-* `seeds.sql`:  Script de manipulación de datos (DML) que carga los roles iniciales (`DUENO`, `CUIDADOR`, `ADMIN`).
+La base de la aplicación se crea y actualiza con las migraciones de `backend/migrations/`. Este es el único procedimiento vigente para reconstruir el esquema.
 
-
-## Instrucciones de ejecución
-Se requiere MySQL instalado, el servidor en funcionamiento y el comando `mysql` disponible en la terminal. El usuario debe tener permisos para crear la base de datos y sus tablas. Los ejemplos utilizan `root`; reemplazarlo si corresponde.
-
-Ejecutar los comandos desde la raíz del repositorio y elegir la opción correspondiente a la terminal utilizada.
-
-**Atención:** `schema.sql` elimina las tablas existentes del proyecto y sus datos antes de recrearlas. Utilizarlo únicamente en una base de desarrollo destinada a este proyecto.
-
-### Opción 1: Bash
-
-Ejecutar los siguientes comandos e ingresar la contraseña cuando se solicite:
-
-```bash
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS cuidandopeluditos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p cuidandopeluditos < database/schema.sql
-mysql -u root -p cuidandopeluditos < database/seeds.sql
-```
-
-Comprobar las tablas y los roles:
-
-```bash
-mysql -u root -p cuidandopeluditos -e "SHOW TABLES; SELECT id, nombre FROM roles;"
-```
-
-### Opción 2: PowerShell
-
-Abrir el cliente de MySQL:
+Con la base y el usuario local creados y `DATABASE_URL` configurada en la misma terminal, ejecutar desde la raíz del repositorio:
 
 ```powershell
-mysql -u root -p
+python -m flask --app backend.run:app db upgrade --directory backend/migrations
+python -m flask --app backend.run:app db current --directory backend/migrations
+python -m flask --app backend.run:app db check --directory backend/migrations
 ```
 
-Ingresar la contraseña. Luego, ejecutar lo siguiente dentro del cliente de MySQL, identificado por el indicador `mysql>`:
+La revisión vigente es `c0af3fd5552a`. La estructura contiene diez tablas de dominio y `alembic_version`, que registra la revisión aplicada. `db check` debe informar `No new upgrade operations detected.` cuando modelos y esquema coinciden.
+
+La creación de la base, la cuenta de desarrollo y la configuración se explican en la [guía local con MariaDB](../docs/ejecucion-local-mariadb.md). El [ejemplo de variables](../.env.example) no contiene credenciales reales.
+
+## Roles iniciales
+
+Después de aplicar las migraciones, cargar los roles. Dentro del cliente MariaDB, con la base correspondiente seleccionada:
 
 ```sql
-CREATE DATABASE IF NOT EXISTS cuidandopeluditos
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-USE cuidandopeluditos;
-
-SOURCE database/schema.sql;
-SOURCE database/seeds.sql;
-
-SHOW TABLES;
+INSERT IGNORE INTO roles (nombre) VALUES ('DUENO'), ('CUIDADOR'), ('ADMIN');
 SELECT id, nombre FROM roles;
 ```
 
-Para salir del cliente:
+`seeds.sql` conserva la carga original con identificadores fijos para una base inicial. Para una base ya utilizada, el comando anterior carga por nombre sin reasignar identificadores. ADMIN se reserva para una extensión posterior; su existencia no implica un panel administrativo implementado.
 
-```sql
-EXIT;
-```
+## SQL histórico de Entrega 2
 
-### Resultado esperado
+`schema.sql` se conserva como antecedente del diseño presentado en Entrega 2. No representa el esquema actual ni debe ejecutarse para instalar o actualizar la aplicación. Contiene instrucciones que eliminan tablas y datos.
 
-La consulta `SHOW TABLES` debe listar las nueve tablas del proyecto. La consulta sobre `roles` debe mostrar `DUENO`, `CUIDADOR` y `ADMIN`.
+Las migraciones incorporan las correcciones posteriores: horarios de visitas, tarifa por visita, límite de urgencias, dirección del servicio, veterinario histórico, restricción de mascota única por solicitud, historial de estados y autorización de urgencias desactivada por defecto. No combinar la carga del SQL histórico con el procedimiento de migraciones.
 
-## Diagrama Entidad-Relación (DER)
-```mermaid
-erDiagram
-    ROL ||--o{ USUARIO : asignado
-    USUARIO ||--o| PERFIL_CUIDADOR : extiende
-    USUARIO ||--o{ MASCOTA : posee
-    USUARIO ||--o{ SOLICITUD : emite
-    PERFIL_CUIDADOR ||--o{ DISPONIBILIDAD : declara
-    PERFIL_CUIDADOR ||--o{ SOLICITUD : recibe
-    SOLICITUD ||--|{ SOLICITUD_MASCOTA : contiene
-    MASCOTA ||--o{ SOLICITUD_MASCOTA : incluida_en
-    SOLICITUD ||--o| VALORACION : calificada_con
-    SOLICITUD ||--o{ INCIDENCIA : registra
-```
+## Entidades de la versión actual
+
+Roles, usuarios, perfiles de cuidadores, mascotas, disponibilidades, solicitudes, mascotas asociadas a solicitudes, valoraciones, incidencias e historial de estados. La tabla adicional alembic_version registra la revisión aplicada.
