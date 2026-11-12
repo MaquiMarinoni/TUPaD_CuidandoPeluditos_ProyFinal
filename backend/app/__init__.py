@@ -1,7 +1,7 @@
 
 import os
 
-from flask import Flask, app, jsonify
+from flask import Flask, jsonify
 from flask_wtf.csrf import CSRFError
 
 from .config import config_by_name
@@ -30,25 +30,37 @@ def create_app(config_name=None):
     # Cargar los modelos antes de registrar las rutas.
     from . import models
 
-    # Registrar el módulo de autenticación.
+    # Autenticación y usuarios.
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
 
+    # Gestión de mascotas.
     from .mascotas import mascotas_bp
     app.register_blueprint(mascotas_bp)
 
+    # Cuidadores y disponibilidad.
     from .cuidadores import cuidadores_bp
     app.register_blueprint(cuidadores_bp)
 
     from .disponibilidades import disponibilidades_bp
     app.register_blueprint(disponibilidades_bp)
 
+    # Solicitudes de alojamiento y visitas.
     from .solicitudes import solicitudes_bp
     app.register_blueprint(solicitudes_bp)
 
     from .visitas import visitas_bp
     app.register_blueprint(visitas_bp)
 
+    # Incidencias y contingencias.
+    from .incidencias import incidencias_bp
+    app.register_blueprint(incidencias_bp)
+
+    # Valoraciones verificadas.
+    from .valoraciones import valoraciones_bp
+    app.register_blueprint(valoraciones_bp)
+
+    # Interfaz web desarrollada por Maru.
     from .ui_base import ui_bp
     app.register_blueprint(ui_bp)
 
