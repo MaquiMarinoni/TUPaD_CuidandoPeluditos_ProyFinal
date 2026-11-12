@@ -205,7 +205,8 @@ function accionesSolicitud(s) {
   if (usuario?.rol === "CUIDADOR" && s.estado === "PENDIENTE") resultado += boton("aceptar", "Aceptar", "btn-primary") + boton("rechazar", "Rechazar", "btn-outline-danger");
   const inicio = s.modalidad === "VISITA" ? new Date(`${s.fecha_desde}T${s.hora_desde}`) : new Date(`${s.fecha_desde}T00:00:00`);
   const fin = s.modalidad === "VISITA" ? new Date(`${s.fecha_hasta}T${s.hora_hasta}`) : new Date(`${s.fecha_hasta}T00:00:00`);
-  if (usuario?.rol === "DUENO" && (s.estado === "PENDIENTE" || (s.estado === "ACEPTADA" && inicio > new Date()))) resultado += boton("cancelar", "Cancelar solicitud", "btn-outline-danger");
+  const puedeCancelar = (usuario?.rol === "DUENO" && s.estado === "PENDIENTE") || (["DUENO", "CUIDADOR"].includes(usuario?.rol) && s.estado === "ACEPTADA" && inicio > new Date());
+  if (puedeCancelar) resultado += boton("cancelar", "Cancelar solicitud", "btn-outline-danger");
   if (usuario?.rol === "CUIDADOR" && s.estado === "ACEPTADA" && fin <= new Date()) resultado += boton("finalizar", "Finalizar servicio", "btn-outline-primary");
   return resultado;
 }

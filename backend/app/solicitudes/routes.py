@@ -722,7 +722,8 @@ def cambiar_estado(solicitud_id, accion):
     Gestiona los estados de alojamiento y visitas.
 
     El cuidador acepta, rechaza o finaliza.
-    El dueño puede cancelar según el estado.
+    Ambos participantes pueden cancelar una reserva aceptada antes del inicio.
+    El dueño también puede cancelar una solicitud pendiente.
     """
     solicitud_previa = db.session.get(
         Solicitud,
@@ -951,10 +952,12 @@ def cambiar_estado(solicitud_id, accion):
             nuevo = "RECHAZADA"
 
         elif accion == "cancelar":
-            if (
-                not es_dueno
-                or anterior not in ("PENDIENTE", "ACEPTADA")
-            ):
+            puede_cancelar = (
+                es_dueno and anterior in ("PENDIENTE", "ACEPTADA")
+            ) or (
+                es_cuidador and anterior == "ACEPTADA"
+            )
+            if not puede_cancelar:
                 db.session.rollback()
                 return error(
                     "No se puede cancelar esta solicitud.",

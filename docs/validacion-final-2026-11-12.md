@@ -60,3 +60,7 @@ python -m pytest tests/test_incidencias.py tests/test_valoraciones.py tests/test
 ## Observaciones
 
 Los avisos por `datetime.utcnow()` y `Query.get()` corresponden a APIs deprecadas. No impidieron las pruebas automatizadas registradas.
+
+## Cancelación por el cuidador
+
+Se incorporó la cancelación de reservas aceptadas por el cuidador antes del inicio. Recorrido manual confirmado en MariaDB y siete pruebas aisladas adicionales aprobadas: [Registro y evidencias](pruebas-cancelacion-cuidador-2026-11-12.md).
