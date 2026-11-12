@@ -51,6 +51,9 @@ def create_app(config_name=None):
 
     from .incidencias import incidencias_bp
     app.register_blueprint(incidencias_bp)
+    from .valoraciones import valoraciones_bp
+    app.register_blueprint(valoraciones_bp)
+
     @app.route("/health")
     def health_check():
         return {
