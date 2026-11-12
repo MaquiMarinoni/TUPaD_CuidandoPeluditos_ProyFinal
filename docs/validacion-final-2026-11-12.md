@@ -64,3 +64,7 @@ Los avisos por `datetime.utcnow()` y `Query.get()` corresponden a APIs deprecada
 ## Cancelación por el cuidador
 
 Se incorporó la cancelación de reservas aceptadas por el cuidador antes del inicio. Recorrido manual confirmado en MariaDB y siete pruebas aisladas adicionales aprobadas: [Registro y evidencias](pruebas-cancelacion-cuidador-2026-11-12.md).
+
+## Retiro e ingreso de alojamiento el mismo día
+
+Prueba ejecutada sobre MariaDB: con capacidad 1 se aceptaron dos reservas consecutivas y se impidió una tercera con superposición real. Estados consultados antes de cancelar las tres solicitudes de prueba: [Registro de recambio de alojamiento](pruebas-recambio-alojamiento-2026-11-12.md).
