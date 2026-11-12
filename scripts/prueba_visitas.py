@@ -4,10 +4,11 @@ from http.cookiejar import CookieJar
 from urllib.error import HTTPError
 from urllib.request import Request, HTTPCookieProcessor, build_opener
 import json
+import os
 import uuid
 
 
-BASE = "http://127.0.0.1:5000"
+BASE = os.environ.get("PELUDITOS_TEST_URL", "http://127.0.0.1:5000").rstrip("/")
 PASSWORD = "PruebaLocal2026!"
 fallas = 0
 

@@ -86,6 +86,27 @@ Evidencias: [preparación](evidencias/mariadb-2026-11-11/17-preparacion-visitas.
 
 Identificadores informados por esta ejecución: cuidador 3; solicitud de Ana 4; solicitud de Beto 5. La visita ganadora se canceló y su disponibilidad se desactivó al final, como parte de la prueba.
 
+## Pruebas complementarias de cierre
+
+En la misma instancia MariaDB del puerto 5001 se ejecutaron cuatro scripts adicionales, uno por vez, manteniendo `PELUDITOS_TEST_URL` configurada. Todos terminaron con `TODAS LAS PRUEBAS PASARON`.
+
+| Script | Casos comprobados | Resultado y evidencia |
+| --- | --- | --- |
+| `python -m scripts.prueba_ciclo_y_snapshots` | Especie no admitida, fechas inválidas, urgencias incompletas, rechazo y transición posterior inválida; autorización de urgencias con tope; conservación de nombre, cuidados y veterinario históricos después de editar la mascota; bloqueo de finalización anticipada; baja lógica y consulta de antecedentes. | Todos aprobados. Salida de consola registrada durante la prueba. Cuidador 4; solicitud rechazada 6; solicitud cancelada 7. |
+| `python -m scripts.prueba_visitas` | Visita con dos mascotas y precio por turno; dirección histórica; superposición; privacidad y mascota ajena; horario fuera de disponibilidad, horario invertido y dirección obligatoria; CSRF; finalización anticipada; cancelación y posterior aceptación del turno liberado; historial. | Todos aprobados. Salida de consola registrada durante la prueba. Cuidador 5; visita de Ana 8 y de Beto 9. |
+| `& .\scripts\prueba_seguridad_mascotas.ps1` | Acceso sin sesión; lectura, edición y baja de mascota ajena; permisos de cuidador; especie inválida; intento de enviar `dueno_id`; CSRF y baja lógica propia. | Todos aprobados. [Salida del script](evidencias/mariadb-2026-11-11/19-seguridad-mascotas.png). |
+| `& .\scripts\prueba_solicitudes.ps1` | Alojamiento con dos mascotas, precio calculado en backend, permisos de aceptación, sobrecupo, consulta ajena, mascota duplicada o ajena; cancelación, liberación de cupo, transición repetida, finalización anticipada, historial y CSRF. | Todos aprobados. [Salida del script](evidencias/mariadb-2026-11-11/20-reglas-solicitudes.png). |
+
+El rechazo explícito guarda el estado RECHAZADA. Un intento de aceptación bloqueado por conflicto devuelve HTTP 409 y conserva PENDIENTE; son situaciones diferentes.
+
+### Finalización válida en una base aislada
+
+Se ejecutó `python -m pytest tests/test_finalizacion.py -q`: **1 passed**. El caso usa SQLite en memoria y un servicio histórico ficticio que ya terminó. Comprueba el cambio ACEPTADA → FINALIZADA, su persistencia e historial y el rechazo de una segunda finalización.
+
+No se cambió el reloj ni se modificaron fechas de reservas de MariaDB. Esta prueba no se presenta como una finalización positiva ejecutada en MariaDB. En MariaDB sí se comprobó que un servicio futuro no puede finalizarse.
+
+La ejecución aislada mostró avisos de deprecación por `datetime.utcnow()` y `Query.get()` en el backend. No impidieron que la prueba pasara.
+
 ## Datos de las pruebas visibles en la aplicación
 
 Al consultar el catálogo en la instancia de MariaDB aparecen Cuidador Prueba, Carlos Integridad y Carlos Auditoría. El primero se creó desde la interfaz; los otros dos, mediante los scripts.
@@ -96,7 +117,7 @@ Al consultar el catálogo en la instancia de MariaDB aparecen Cuidador Prueba, C
 
 Las dos ejecuciones comprobaron los escenarios concurrentes definidos en los scripts sobre MariaDB/InnoDB. Los HTTP 400, 403, 404 y 409 de las tablas fueron respuestas esperadas de los casos negativos, no fallos de ejecución.
 
-Estos resultados no equivalen a una prueba de carga ni a una auditoría completa de seguridad. Quedan pendientes otros escenarios y recorridos: finalización del servicio, reseñas e incidencias cuando estén integradas, más combinaciones de fechas y especies, conservación del historial después de editar mascotas y revisión completa de la interfaz en celular y con teclado.
+Estos resultados no equivalen a una prueba de carga ni a una auditoría completa de seguridad. Quedan pendientes la finalización positiva de un servicio ya terminado en MariaDB, las reseñas e incidencias cuando estén integradas, más combinaciones de fechas y especies y la revisión completa de la interfaz en celular y con teclado. La conservación de los datos históricos después de editar o desactivar una mascota sí se comprobó en las pruebas complementarias.
 
 El [registro anterior](pruebas-manuales-frontend.md) conserva las pruebas de SQLite realizadas antes de instalar MariaDB. Los identificadores y las cuentas de ambas bases son independientes.
 
@@ -195,6 +216,23 @@ Las imágenes se agrupan por tipo de comprobación. Las capturas web muestran la
 ![Concurrencia, permisos, CSRF, liberación y resultado de visitas](evidencias/mariadb-2026-11-11/18-concurrencia-visitas-resultado.png)
 
 </details>
+
+<details>
+<summary>Pruebas complementarias de mascotas y solicitudes</summary>
+
+**Seguridad y baja lógica de mascotas**
+
+![Seguridad y baja lógica de mascotas](evidencias/mariadb-2026-11-11/19-seguridad-mascotas.png)
+
+**Reglas y estados de solicitudes**
+
+![Reglas y estados de solicitudes](evidencias/mariadb-2026-11-11/20-reglas-solicitudes.png)
+
+</details>
+
+## Ejecución del proyecto
+
+La [guía de ejecución local con MariaDB](ejecucion-local-mariadb.md) reúne la preparación del entorno, configuración de conexión sin credenciales en el repositorio, migraciones, roles, arranque de Flask y comandos de prueba. También distingue la demo SQLite de la instancia de MariaDB.
 
 ## Uso de IA
 

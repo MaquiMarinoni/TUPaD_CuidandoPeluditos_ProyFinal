@@ -40,6 +40,16 @@ El repositorio reúne los informes de las entregas y la documentación del model
 
 ---
 
+## Ejecución local y pruebas de implementación
+
+- [Guía de ejecución local con MariaDB en Windows](docs/ejecucion-local-mariadb.md).
+- [Pruebas manuales del frontend en SQLite](docs/pruebas-manuales-frontend.md).
+- [Integración y concurrencia en MariaDB](docs/pruebas-mariadb.md).
+
+Los informes de Entrega 01 y 02 conservan la planificación original. Los registros de pruebas describen los casos ejecutados durante la implementación, sus resultados y pendientes.
+
+---
+
 ## 3. Stack tecnológico
 
 | Capa | Tecnologías | Justificación Técnica y Curricular |

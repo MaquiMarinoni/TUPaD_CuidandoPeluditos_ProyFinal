@@ -1,6 +1,6 @@
 
 $ErrorActionPreference = "Stop"
-$base = "http://127.0.0.1:5000"
+$base = if ($env:PELUDITOS_TEST_URL) { $env:PELUDITOS_TEST_URL.TrimEnd("/") } else { "http://127.0.0.1:5000" }
 $fallas = 0
 
 function Peticion($metodo, $ruta, $sesion, $headers, $datos = $null) {
