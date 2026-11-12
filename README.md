@@ -13,7 +13,7 @@ UNIVERSIDAD TECNOLOGICA NACIONAL
 **Marianela Valletto** — [@maruvalletto](https://github.com/maruvalletto) ([maruvalletto@gmail.com](mailto:maruvalletto@gmail.com))  
 
 **Docente:** Oscar Londero  
-**Estado Actual:** Entrega 02 — Diseño y Módulos
+**Estado Actual:** Integración y validación funcional P0/P1 — noviembre de 2026
 
 
 ---
@@ -21,6 +21,19 @@ UNIVERSIDAD TECNOLOGICA NACIONAL
 </div>
 
 <div align="justify">
+
+## Validación final de implementación — 12/11/2026
+
+La versión conjunta integra la interfaz de Maru con el backend de los módulos P0 y P1. Las pruebas automatizadas de incidencias, valoraciones, privacidad y finalización terminaron con **14 pruebas aprobadas**. También se comprobó la finalización positiva e historial en MariaDB con un servicio ficticio y limpieza posterior.
+
+La prueba P1 en la base aislada `cuidandopeluditos_pruebas` verificó por HTTP autenticado la creación, consulta, resolución y persistencia de incidencias; la creación, listado, promedio y persistencia de valoraciones; y controles de permisos, duplicados y estados. La salida se conserva en [evidencias de P1 en MariaDB](docs/evidencias/p1-mariadb-2026-11-12.txt).
+
+- [Instrucciones de ejecución actualizadas](docs/ejecucion-local-mariadb.md)
+- [Registro de validación final y pendientes](docs/validacion-final-2026-11-12.md)
+- [Antecedentes de pruebas de MariaDB](docs/pruebas-mariadb.md)
+
+**Alcance:** se validó el código y la persistencia para los casos indicados, sin afirmar despliegue público ni auditoría de seguridad completa.
+
 
 ## 1. Descripción del proyecto
 

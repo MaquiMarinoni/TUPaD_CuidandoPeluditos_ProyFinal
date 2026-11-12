@@ -1,5 +1,7 @@
 # Pruebas de integración y concurrencia en MariaDB — 11/11/2026
 
+> **Actualización posterior — 12/11/2026:** este informe conserva íntegramente los resultados históricos del 11/11. Los pendientes registrados entonces se verificaron posteriormente: finalización positiva en MariaDB (script `prueba_finalizacion_mariadb.py`), 14 pruebas automatizadas de cierre y prueba real de incidencias y valoraciones en MariaDB (evidencia [P1](evidencias/p1-mariadb-2026-11-12.txt)). Véase [validación final](validacion-final-2026-11-12.md). Las notas de “pendiente” que siguen describen el estado al **11/11**, no el estado actualizado.
+
 ## Entorno
 
 - Ejecución: Marianela, desde el navegador y la terminal de VS Code.

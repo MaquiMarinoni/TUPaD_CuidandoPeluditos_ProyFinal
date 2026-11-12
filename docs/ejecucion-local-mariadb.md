@@ -2,6 +2,36 @@
 
 Entorno probado: Python 3.13, MariaDB 11.4.13 con tablas InnoDB y dependencias de `backend/requirements.txt`. Ejecutar los comandos PowerShell desde la raíz del repositorio, con el servicio MariaDB iniciado.
 
+## Actualización de cierre: XAMPP y módulos P1 (12/11/2026)
+
+La guía original describe el entorno MariaDB 11.4 utilizado por Marianela. El proyecto también se ejecutó con **MariaDB 10.4.32 instalado mediante XAMPP** en Windows. No es necesario instalar otra instancia si el servicio `mysql_xampp` ya está iniciado.
+
+Desde la raíz del repositorio, activar el entorno virtual que ya se creó. Configurar `DATABASE_URL` para que apunte a **`cuidandopeluditos_pruebas`**, nunca a la base principal para ejecutar pruebas con datos ficticios. Si la terminal está recién abierta, volver a configurar la variable: no se conserva entre terminales. Utilizar las credenciales que correspondan al servidor local; no guardarlas en Git ni en evidencias.
+
+```powershell
+# Revisar SOLO el nombre de la base, sin imprimir contraseñas:
+python -c "from backend.app import create_app; a=create_app(); print(a.config['SQLALCHEMY_DATABASE_URI'].rsplit('@',1)[-1].split('?')[0])"
+
+# Verificar migraciones (con DATABASE_URL ya configurada):
+python -m flask --app backend.run:app db current --directory backend/migrations
+python -m flask --app backend.run:app db check --directory backend/migrations
+
+# Aplicación completa:
+python -m flask --app backend.run:app run --host 127.0.0.1 --port 5001 --no-debugger --no-reload
+```
+
+Abrir `http://127.0.0.1:5001/`. Para comprobar la funcionalidad P1 no hace falta un servidor Flask aparte: el script usa el cliente HTTP de pruebas de Flask con MariaDB real.
+
+```powershell
+# Desde la raíz y con DATABASE_URL apuntando a la base _pruebas:
+python -m scripts.prueba_finalizacion_mariadb
+python -m scripts.prueba_p1_mariadb
+python -m pytest tests/test_incidencias.py tests/test_valoraciones.py tests/test_privacidad_solicitudes.py tests/test_finalizacion.py -q
+```
+
+La prueba P1 elimina las entidades ficticias que genera y escribe su evidencia en `docs/evidencias/p1-mariadb-2026-11-12.txt`. Si falla, no debe declararse aprobada. Los scripts originales de regresión pueden generar otras reservas de prueba y deben ejecutarse únicamente sobre una base aislada.
+
+
 ## 1. Dependencias
 
 ```powershell

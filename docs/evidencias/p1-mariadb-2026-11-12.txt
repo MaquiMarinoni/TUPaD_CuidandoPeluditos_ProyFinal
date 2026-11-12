@@ -1,0 +1,33 @@
+Cuidando Peluditos - Prueba P1 MariaDB - 12/11/2026
+Motor MariaDB/MySQL, base aislada _pruebas. Ejecución local con Flask test_client.
+Script: python -m scripts.prueba_p1_mariadb
+[OK] Motor MariaDB/MySQL y base _pruebas verificados
+[OK] Token CSRF disponible
+[OK] Inicio de sesión de usuario ficticio: HTTP 200
+[OK] Token CSRF disponible
+[OK] Inicio de sesión de usuario ficticio: HTTP 200
+[OK] Token CSRF disponible
+[OK] Inicio de sesión de usuario ficticio: HTTP 200
+[OK] Cuidador registra incidencia: HTTP 201
+[OK] Incidencia inicial ABIERTA
+[OK] Dueño consulta incidencias: HTTP 200
+[OK] Incidencia consultable por dueño
+[OK] Tercero no puede consultar incidencias: HTTP 404
+[OK] Dueño no puede resolver incidencia: HTTP 403
+[OK] Cuidador resuelve incidencia: HTTP 200
+[OK] Incidencia final RESUELTA
+[OK] No admite segunda resolución: HTTP 409
+[OK] Dueño no puede reportar incidencia: HTTP 403
+[OK] Dueño valora servicio finalizado: HTTP 201
+[OK] Puntaje guardado
+[OK] Listado público de valoraciones: HTTP 200
+[OK] Cantidad y promedio correctos
+[OK] Consulta del promedio público: HTTP 200
+[OK] No admite doble valoración: HTTP 409
+[OK] Cuidador no puede valorar: HTTP 403
+[OK] Otro dueño no puede valorar una solicitud ajena: HTTP 404
+[OK] No se valora servicio no finalizado: HTTP 409
+[OK] Incidencia RESUELTA persistida en MariaDB
+[OK] Valoración de 5 estrellas persistida en MariaDB
+[OK] Limpieza de entidades ficticias
+TODAS LAS PRUEBAS P1 PASARON
