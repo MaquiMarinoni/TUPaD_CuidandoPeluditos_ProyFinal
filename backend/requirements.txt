@@ -9,3 +9,5 @@ PyMySQL==1.1.1
 cryptography==42.0.8
 python-dotenv==1.0.1
 pytest==8.2.2
+
+gunicorn==22.0.0
