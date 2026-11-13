@@ -1,133 +1,457 @@
-<div>
+ 
+# Cuidando Peluditos 🐾
 
-UNIVERSIDAD TECNOLOGICA NACIONAL
+### Plataforma web de cuidado y alojamiento de mascotas
 
-# CUIDANDO PELUDITOS
-### Plataforma de cuidado y alojamiento de mascotas
-
-**TRABAJO INTEGRADOR FINAL DE CARRERA**  
+**Universidad Tecnológica Nacional (UTN)**  
+**Trabajo Integrador Final de Carrera — Tecnicatura Universitaria en Programación**  
 **Grupo:** 176  
-
-**Integrantes:**  
-**Macarena Marinoni** — [@MaquiMarinoni](https://github.com/MaquiMarinoni) ([marinonimacarena@gmail.com](mailto:marinonimacarena@gmail.com))  
-**Marianela Valletto** — [@maruvalletto](https://github.com/maruvalletto) ([maruvalletto@gmail.com](mailto:maruvalletto@gmail.com))  
-
 **Docente:** Oscar Londero  
-**Estado Actual:** Integración y validación funcional P0/P1 — noviembre de 2026
+**Fecha:** noviembre de 2026
 
+**Integrantes:**
+- Macarena Marinoni — [GitHub](https://github.com/MaquiMarinoni)
+- Marianela Valletto — [GitHub](https://github.com/maruvalletto)
 
----
-
-</div>
-
-<div align="justify">
-
-## Validación final de implementación — 12/11/2026
-
-La versión conjunta integra la interfaz de Maru con el backend de los módulos P0 y P1. Las pruebas automatizadas de incidencias, valoraciones, privacidad y finalización terminaron con **14 pruebas aprobadas**. También se comprobó la finalización positiva e historial en MariaDB con un servicio ficticio y limpieza posterior.
-
-La prueba P1 en la base aislada `cuidandopeluditos_pruebas` verificó por HTTP autenticado la creación, consulta, resolución y persistencia de incidencias; la creación, listado, promedio y persistencia de valoraciones; y controles de permisos, duplicados y estados. La salida se conserva en [evidencias de P1 en MariaDB](docs/evidencias/p1-mariadb-2026-11-12.txt).
-
-- [Instrucciones de ejecución actualizadas](docs/ejecucion-local-mariadb.md)
-- [Registro de validación final y pendientes](docs/validacion-final-2026-11-12.md)
-- [Antecedentes de pruebas de MariaDB](docs/pruebas-mariadb.md)
-
-**Alcance:** se validó el código y la persistencia para los casos indicados, sin afirmar despliegue público ni auditoría de seguridad completa.
-
-
-## 1. Descripción del proyecto
-
-**Cuidando Peluditos** es un proyecto de plataforma web que busca facilitar la búsqueda y coordinación de servicios de cuidado para perros y gatos ante viajes, compromisos laborales o imprevistos. Contempla dos modalidades: alojamiento en el hogar del cuidador y visitas al domicilio del dueño.
-
-La propuesta reúne perfiles de cuidadores, condiciones de convivencia y disponibilidad para que los dueños puedan comparar alternativas y enviar solicitudes para una o varias mascotas. El diseño contempla el control de cupos para evitar reservas incompatibles, la conservación de las indicaciones de cuidado de cada servicio, el registro de incidencias y las valoraciones asociadas a servicios finalizados.
+**Estado del proyecto:** aplicación desplegada y circuito funcional principal validado.
 
 ---
 
-## 2. Documentación de entregas
+## 1. Accesos principales
 
-El repositorio reúne los informes de las entregas y la documentación del modelo de datos:
+| Recurso | Enlace |
+|---|---|
+| Aplicación web publicada | [Cuidando Peluditos — Render](https://cuidando-peluditos.onrender.com) |
+| Informe final | [Informe Final — Grupo 176](docs/Informe_Final_Cuidando_Peluditos_G176.md) |
+| Entrega 01 | [Propuesta y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md) |
+| Entrega 02 | [Diseño y modelo de datos](docs/Marinoni-Valletto_G176_Entrega02.md) |
+| Video de presentación | Pendiente de incorporar |
+| Guía de ejecución local | [Ejecución con MariaDB](docs/ejecucion-local-mariadb.md) |
+| Evidencias de pruebas | [Validación final](docs/validacion-final-2026-11-12.md) |
 
-* **[Entrega 01 — Propuesta de Proyecto y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md):** Presenta el problema, la propuesta de valor y los resultados de la investigación con usuarios: cinco entrevistas semiestructuradas, un card sorting con diez participantes y pruebas de usabilidad con una duración promedio del recorrido de 54 segundos.
-* **[Entrega 02 — Diseño, DER y módulos a desarrollar](docs/Marinoni-Valletto_G176_Entrega02.md):** Describe las reglas de negocio, el modelo de datos, los estados de las solicitudes, la arquitectura, los módulos priorizados y el escenario de prueba integral.
-* **[Directorio de Base de Datos](database/):**  Documenta las migraciones vigentes, los roles iniciales y el diagrama de entidades. `schema.sql` se conserva únicamente como antecedente histórico de Entrega 2 y no se utiliza para reconstruir la aplicación actual.
+**Repositorio:**  
+https://github.com/MaquiMarinoni/TUPaD_CuidandoPeluditos_ProyFinal
 
----
+**Rama utilizada para el despliegue:** `deploy/render`.
 
-## Ejecución local y pruebas de implementación
-
-- [Guía de ejecución local con MariaDB en Windows](docs/ejecucion-local-mariadb.md).
-- [Variables de entorno de ejemplo](.env.example) y [procedimiento vigente de base de datos](database/README.md).
-- [Pruebas manuales del frontend en SQLite](docs/pruebas-manuales-frontend.md).
-- [Integración y concurrencia en MariaDB](docs/pruebas-mariadb.md).
-
-Los informes de Entrega 01 y 02 conservan la planificación original. Los registros de pruebas describen los casos ejecutados durante la implementación, sus resultados y pendientes.
-
----
-
-## 3. Stack tecnológico
-
-| Capa | Tecnologías | Justificación Técnica y Curricular |
-| :--- | :--- | :--- |
-| **Frontend** | HTML5, CSS3, JavaScript ES6, Bootstrap 5.3 | Interfaz responsiva tradicional basada en componentes y prototipos UX previamente validados con usuarios del público objetivo. |
-| **Backend** | Python 3.10+, Flask 3.x | Arquitectura modular desacoplada mediante el patrón *Application Factory* y *Blueprints* organizados por dominio. |
-| **Persistencia / ORM** | Flask-SQLAlchemy 3.x, Flask-Migrate (Alembic) | Mapeo objeto-relacional de entidades, control de transacciones ACID y evolución versionada del esquema. |
-| **Base de Datos** | MySQL 8.x / MariaDB (InnoDB) | Motor relacional con integridad referencial estricta, restricciones de unicidad, índices B-Tree y bloqueo pesimista (`SELECT ... FOR UPDATE`). |
-| **Seguridad y Normativa** | Flask-Login, Werkzeug Security, Ley N° 25.326 | Sesiones seguras, hashing irreversible de contraseñas, permisos por rol (`DUENO`, `CUIDADOR`, `ADMIN`) y principio de minimización de datos sensibles y domicilios exactos. |
-| **Testing** | Pytest | Suite de pruebas automatizadas para validación de agenda, solapamientos y condiciones de carrera concurrentes. |
+> El video y la versión PDF del informe deben incorporarse antes de cerrar la entrega académica, si son exigidos por la consigna.
 
 ---
 
-## 4. Estructura del repositorio
+## 2. Descripción del proyecto
+
+Cuidando Peluditos es una aplicación web desarrollada para facilitar la búsqueda y coordinación de servicios de cuidado temporal de perros y gatos.
+
+Permite que los dueños registren sus mascotas, consulten cuidadores disponibles y gestionen solicitudes de cuidado. A su vez, los cuidadores pueden configurar su perfil, publicar disponibilidades y administrar las solicitudes recibidas.
+
+Se contemplan dos modalidades:
+
+- **Visitas a domicilio:** el cuidador asiste al domicilio del dueño en las fechas y horarios acordados.
+- **Alojamiento:** la mascota permanece temporalmente en el hogar del cuidador.
+
+La plataforma centraliza información sobre mascotas, disponibilidad, condiciones del servicio, solicitudes, incidencias y valoraciones.
+
+### Objetivo general
+
+Desarrollar una plataforma web que permita coordinar servicios de cuidado de mascotas mediante un sistema de gestión con autenticación, persistencia de datos, control de disponibilidad y seguimiento de solicitudes.
+
+### Objetivos específicos
+
+- Registrar usuarios con roles diferenciados.
+- Gestionar mascotas y sus indicaciones de cuidado.
+- Publicar perfiles y disponibilidades de cuidadores.
+- Buscar cuidadores mediante filtros.
+- Crear y administrar solicitudes de cuidado.
+- Controlar cupos y evitar reservas incompatibles.
+- Registrar incidencias durante los servicios.
+- Permitir valoraciones posteriores a la finalización.
+
+---
+
+## 3. Tecnologías utilizadas
+
+| Componente | Tecnología |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript ES6 y Bootstrap 5.3 |
+| Backend | Python 3 y Flask 3 |
+| Arquitectura | Application Factory y Blueprints |
+| ORM | Flask-SQLAlchemy |
+| Migraciones | Flask-Migrate y Alembic |
+| Autenticación | Flask-Login y Flask-WTF |
+| Base de datos local | MariaDB / MySQL |
+| Base de datos en producción | TiDB Cloud, compatible con MySQL |
+| Conector de base de datos | PyMySQL |
+| Servidor de producción | Gunicorn |
+| Alojamiento web | Render |
+| Pruebas automatizadas | Pytest |
+| Control de versiones | Git y GitHub |
+
+### Arquitectura de producción
+
+```text
+                  USUARIO
+                     |
+                     | HTTPS
+                     v
+            APLICACIÓN WEB
+                 Render
+                     |
+                     | Gunicorn
+                     v
+              BACKEND FLASK
+                     |
+                     | SQLAlchemy / PyMySQL
+                     | Conexión TLS
+                     v
+                TiDB CLOUD
+             Base de datos SQL
+                persistente
+```
+
+El backend se ejecuta en Render y se conecta a TiDB Cloud mediante variables de entorno privadas.
+
+La base de datos se encuentra separada del servicio web, por lo que los registros no dependen del almacenamiento temporal del servidor de Render.
+
+---
+
+## 4. Funcionalidades implementadas
+
+### Autenticación y usuarios
+
+- Registro de usuarios.
+- Inicio y cierre de sesión.
+- Roles Dueño y Cuidador.
+- Control de acceso según usuario y permisos.
+- Persistencia de información entre sesiones.
+
+### Gestión de mascotas
+
+- Registro de perros y gatos.
+- Consulta y actualización de información.
+- Asociación de mascotas con su dueño.
+- Registro de indicaciones relevantes para el cuidado.
+
+### Gestión de cuidadores
+
+- Creación y actualización del perfil.
+- Configuración de servicios y disponibilidad.
+- Búsqueda de cuidadores.
+- Filtros por ubicación, especie y fechas.
+
+### Gestión de solicitudes
+
+- Creación de solicitudes de cuidado.
+- Selección de cuidador y mascotas.
+- Gestión de fechas y horarios.
+- Aceptación y rechazo.
+- Cancelación y liberación de cupos.
+- Finalización del servicio.
+- Historial de estados.
+
+### Incidencias
+
+- Registro de incidencias relacionadas con servicios.
+- Consulta según permisos.
+- Resolución de incidencias.
+
+### Valoraciones
+
+- Valoración de servicios finalizados.
+- Calificación y comentario.
+- Persistencia de las valoraciones registradas.
+
+### Funcionalidades fuera del alcance implementado
+
+El modelo de datos contempla el rol `ADMIN`, pero el panel administrativo de moderación y métricas, clasificado como P2, no forma parte de las funcionalidades operativas validadas en esta entrega.
+
+Tampoco se incluyen pagos reales, geolocalización en tiempo real ni aplicaciones móviles nativas.
+
+---
+
+## 5. Estructura del repositorio
 
 ```text
 TUPaD_CuidandoPeluditos_ProyFinal/
-├── backend/                      # Arquitectura del servidor 
-│   ├── auth/                     # Módulo de autenticación y sesiones seguras
-│   ├── cuidadores/               # Módulo de perfiles, tarifas y disponibilidad
-│   ├── incidencias/              # Módulo de contingencias e imprevistos
-│   ├── mascotas/                 # Módulo de CRUD de mascotas
-│   ├── solicitudes/              # Módulo central de máquina de estados y cupos
-│   ├── valoraciones/             # Módulo de reseñas verificadas post-servicio
-│   └── README.md                 # Documentación de la capa backend
-├── frontend/                     # Capa de presentación (interfaz de usuario)
-│   ├── statics/                  # Hojas de estilo CSS, JS cliente e imágenes
-│   ├── templates/                # Plantillas Jinja2 / HTML organizadas por módulo
-│   └── README.md                 # Documentación técnica de la capa frontend
-├── database/                     # Definición del modelo de datos relacional
-│   ├── schema.sql                # Antecedente histórico de Entrega 2
-│   ├── seeds.sql                 # Script DML con roles iniciales del sistema
-│   └── README.md                 # Documentación del DER 
-├── docs/                         # Informes
-│   ├── Marinoni-Valletto_G176_Entrega01.md  # Informe de la entrega 01
-│   ├── Marinoni-Valletto_G176_Entrega02.md  # Informe de la entrega 02
-│   └── estilos.css                          # Estilos para renderizado y exportación a PDF
-├── .github/                      # Pautas de diagramas Mermaid
-├── .vscode/                      # Configuración del espacio de trabajo
-├── .gitignore                    # Reglas de exclusión de Git
-└── README.md                     # Portada del repositorio
+|
+|-- backend/
+|   |-- app/
+|   |   |-- auth/
+|   |   |-- cuidadores/
+|   |   |-- disponibilidades/
+|   |   |-- incidencias/
+|   |   |-- mascotas/
+|   |   |-- models/
+|   |   |-- solicitudes/
+|   |   |-- valoraciones/
+|   |   `-- visitas/
+|   |-- migrations/
+|   |-- requirements.txt
+|   `-- run.py
+|
+|-- frontend/
+|   |-- statics/
+|   `-- templates/
+|
+|-- database/
+|   |-- README.md
+|   `-- schema.sql
+|
+|-- docs/
+|   |-- Informe_Final_Cuidando_Peluditos_G176.md
+|   |-- Marinoni-Valletto_G176_Entrega01.md
+|   |-- Marinoni-Valletto_G176_Entrega02.md
+|   |-- ejecucion-local-mariadb.md
+|   `-- validacion-final-2026-11-12.md
+|
+|-- scripts/
+|-- tests/
+|-- .env.example
+|-- .gitignore
+`-- README.md
 ```
 
----
-
-## 5. Módulos funcionales y priorización
-
-Los módulos se organizan en tres niveles de prioridad según su importancia para el alcance del proyecto: P0 (núcleo del MVP), P1 (funcionalidades complementarias obligatorias) y P2 (extensiones posteriores al MVP).
-
-* **P0 — Núcleo del MVP:**
-  * `auth`: Registro, login y roles diferenciados (`DUENO`, `CUIDADOR`, `ADMIN`).
-  * `mascotas`: ABM de perros y gatos asociados al dueño y sus cuidados especiales.
-  * `cuidadores`: Perfil público, tarifas, condiciones declaradas de convivencia y calendario de disponibilidad.
-  * `solicitudes`: Gestión del ciclo de las solicitudes de cuidado para una o varias mascotas, conservación de las indicaciones de cuidado al crear la solicitud y control de cupos para evitar reservas incompatibles.
-* **P1 — Complementarios Obligatorios:**
-  * `valoraciones`: Calificación de 1 a 5 estrellas y comentario del dueño sobre un servicio finalizado, con una única valoración por solicitud.
-  * `incidencias`: Protocolo de registro de emergencias veterinarias, conductas anómalas o extravíos durante el servicio.
-* **P2 — Extensión y Post-MVP:**
-  * `admin`: Panel administrativo de moderación, auditoría de incidencias y métricas operativas.
+La carpeta `docs/` contiene también documentación complementaria y evidencias de pruebas.
 
 ---
 
-## 6. Cumplimiento normativo (Ley N° 25.326)
+## 6. Ejecución de la aplicación
 
-En relación con los contenidos de la asignatura *Legislación* y la Ley N.º 25.326, el diseño contempla limitar la exposición de datos personales. Las búsquedas públicas y los perfiles mostrarán únicamente la provincia y la localidad, sin publicar teléfonos ni domicilios exactos. Los datos de contacto y ubicación necesarios para coordinar el cuidado estarán disponibles para el dueño y el cuidador una vez aceptada la solicitud.
+### Opción A — Utilizar la aplicación publicada
 
-</div>
+Para utilizar el sistema no es necesario instalar dependencias ni configurar una base de datos local.
+
+Abrir:
+
+https://cuidando-peluditos.onrender.com
+
+Desde allí es posible registrar usuarios de prueba, crear perfiles, gestionar mascotas y utilizar las funcionalidades disponibles.
+
+**Importante:** debido a las características del plan gratuito de Render, la primera carga después de un período de inactividad puede demorar.
+
+### Opción B — Ejecución local en Windows
+
+#### Requisitos
+
+- Python instalado.
+- Git.
+- Visual Studio Code.
+- MariaDB o MySQL.
+- Base de datos configurada.
+- Variables de entorno locales.
+
+#### Paso 1. Clonar el repositorio
+
+```powershell
+git clone https://github.com/MaquiMarinoni/TUPaD_CuidandoPeluditos_ProyFinal.git
+
+cd TUPaD_CuidandoPeluditos_ProyFinal
+```
+
+Para trabajar con la versión utilizada en el despliegue:
+
+```powershell
+git switch deploy/render
+```
+
+#### Paso 2. Crear el entorno virtual
+
+```powershell
+python -m venv venv
+```
+
+#### Paso 3. Activar el entorno virtual
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+#### Paso 4. Instalar las dependencias
+
+```powershell
+python -m pip install -r backend/requirements.txt
+```
+
+#### Paso 5. Configurar la base de datos
+
+Preparar una base de datos local y configurar el archivo `.env` tomando como referencia `.env.example`.
+
+No publicar contraseñas ni credenciales en GitHub.
+
+Para la configuración detallada de MariaDB, consultar:
+
+[Guía de ejecución local](docs/ejecucion-local-mariadb.md).
+
+#### Paso 6. Ejecutar las migraciones
+
+```powershell
+python -m flask --app backend.run:app db upgrade --directory backend/migrations
+```
+
+Las migraciones deben ejecutarse sobre una base de datos local preparada para el proyecto.
+
+No ejecutar `database/schema.sql` sobre una base con datos existentes: se conserva como antecedente histórico y no es el mecanismo vigente de migración.
+
+#### Paso 7. Iniciar el servidor
+
+```powershell
+python -m flask --app backend.run:app run --debug
+```
+
+#### Paso 8. Abrir la aplicación
+
+Ingresar desde el navegador a:
+
+http://127.0.0.1:5000
+
+La configuración local debe mantenerse separada de las credenciales utilizadas en producción.
+
+---
+
+## 7. Base de datos
+
+El proyecto utiliza un modelo relacional administrado mediante SQLAlchemy y migraciones Alembic.
+
+La versión de migraciones aplicada en producción es:
+
+```text
+c0af3fd5552a
+```
+
+Se verificó la creación de 11 tablas:
+
+1. `alembic_version`
+2. `roles`
+3. `usuarios`
+4. `mascotas`
+5. `perfiles_cuidadores`
+6. `disponibilidades`
+7. `solicitudes`
+8. `solicitudes_mascotas`
+9. `incidencias`
+10. `valoraciones`
+11. `historial_estados`
+
+Los roles iniciales son `DUENO`, `CUIDADOR` y `ADMIN`.
+
+En desarrollo se utilizó MariaDB. Para producción se configuró TiDB Cloud, con conexión cifrada mediante TLS.
+
+**La existencia del rol ADMIN en la base de datos no implica que exista un panel administrativo implementado.**
+
+La documentación técnica se encuentra en [database/README.md](database/README.md).
+
+---
+
+## 8. Pruebas y validación
+
+### Pruebas automatizadas
+
+Se ejecutó la suite de Pytest:
+
+```powershell
+python -m pytest -q
+```
+
+**Resultado registrado: 21 pruebas aprobadas.**
+
+Las advertencias de dependencias obsoletas no impidieron la ejecución satisfactoria de las pruebas.
+
+### Pruebas funcionales en producción
+
+Se realizaron 12 comprobaciones funcionales sobre la aplicación publicada, con resultado satisfactorio en los escenarios informados.
+
+| Área | Casos aprobados |
+|---|---:|
+| Seguridad y permisos | 3/3 |
+| Disponibilidades y cupos | 3/3 |
+| Ciclo completo del servicio | 3/3 |
+| Incidencias, filtros y navegación | 3/3 |
+| **Total** | **12/12** |
+
+Los recorridos incluyeron:
+
+- Acceso restringido sin autenticación.
+- Protección de información y operaciones entre usuarios.
+- Validación de disponibilidad y cupos.
+- Creación y aceptación de solicitudes.
+- Cancelación y liberación de cupos.
+- Finalización de servicios.
+- Registro y persistencia de valoraciones.
+- Registro y resolución de incidencias.
+- Búsqueda mediante filtros.
+- Visualización en pantallas estrechas.
+
+### Persistencia en producción
+
+Se verificó que:
+
+- Los usuarios permanecen registrados después de cerrar sesión.
+- Las mascotas permanecen almacenadas.
+- Los registros continúan disponibles después de reiniciar el servicio web de Render.
+
+Estas pruebas permiten validar los escenarios ejecutados, pero no equivalen a una auditoría integral de seguridad ni a una prueba de carga masiva.
+
+### Evidencias complementarias
+
+- [Validación final](docs/validacion-final-2026-11-12.md).
+- [Pruebas en MariaDB](docs/pruebas-mariadb.md).
+- [Pruebas manuales del frontend](docs/pruebas-manuales-frontend.md).
+
+---
+
+## 9. Consideraciones de seguridad
+
+La aplicación incorpora autenticación, sesiones, protección CSRF y validaciones de permisos para las operaciones implementadas.
+
+Las contraseñas de usuarios se almacenan mediante mecanismos de hashing y las credenciales de infraestructura se administran mediante variables de entorno.
+
+La implementación contempla criterios de minimización de datos personales relacionados con la Ley N.º 25.326 de Protección de Datos Personales de Argentina.
+
+El proyecto es de carácter académico. Las pruebas realizadas no constituyen una certificación de seguridad ni de cumplimiento normativo integral.
+
+---
+
+## 10. Limitaciones conocidas
+
+- El panel administrativo P2 no se encuentra implementado como módulo operativo.
+- No se procesan pagos reales.
+- No existe verificación automática de identidad de los cuidadores.
+- No se realizaron pruebas de carga masiva en producción.
+- El servicio gratuito de Render puede presentar demoras de inicio después de períodos de inactividad.
+- Durante la validación se identificó una diferencia entre la hora del servidor y los horarios de Argentina. Se propuso configurar la zona horaria de Render; corresponde conservar evidencia de la revalidación posterior.
+
+---
+
+## 11. Documentación del proyecto
+
+La documentación se organiza en los siguientes archivos:
+
+| Documento | Contenido |
+|---|---|
+| [Entrega 01](docs/Marinoni-Valletto_G176_Entrega01.md) | Propuesta, problema, objetivos e investigación UX |
+| [Entrega 02](docs/Marinoni-Valletto_G176_Entrega02.md) | Diseño, reglas de negocio, DER y planificación |
+| [Informe Final](docs/Informe_Final_Cuidando_Peluditos_G176.md) | Implementación, resultados y conclusiones |
+| [Ejecución local](docs/ejecucion-local-mariadb.md) | Configuración y puesta en marcha |
+| [Base de datos](database/README.md) | Esquema, migraciones y roles |
+| [Validación final](docs/validacion-final-2026-11-12.md) | Evidencias y pruebas ejecutadas |
+
+---
+
+## 12. Estado de la entrega
+
+La aplicación se encuentra publicada y el circuito principal de Dueño y Cuidador fue validado mediante pruebas automatizadas y manuales.
+
+Para el cierre académico deben verificarse:
+
+- La incorporación del Informe Final en formato PDF.
+- La publicación y vinculación del video de presentación.
+- La accesibilidad de todos los enlaces desde una sesión externa.
+- La identificación del commit o etiqueta de la versión definitiva.
+- La correspondencia entre el código desplegado, el informe y el video.
+
+**Versión de referencia:** rama `deploy/render`.
+
+---
+
+**Cuidando Peluditos — Grupo 176**  
+**Tecnicatura Universitaria en Programación — UTN**  
+**Noviembre de 2026**
