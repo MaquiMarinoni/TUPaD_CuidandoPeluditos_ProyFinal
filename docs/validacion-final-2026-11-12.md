@@ -72,3 +72,7 @@ Prueba ejecutada sobre MariaDB: con capacidad 1 se aceptaron dos reservas consec
 ## Ocupación por noche con solapamientos parciales
 
 Con capacidad 2 se aceptaron A y B consecutivas y C que abarca ambos tramos. D se bloqueó por sobrecupo real; los estados se consultaron antes de cancelar los cuatro casos. Ejecución sobre MariaDB: [Registro de cupos parciales](pruebas-cupos-parciales-2026-11-12.md).
+
+## Filtros de búsqueda desde la web
+
+Se verificaron localidad y provincia con y sin coincidencias, combinación de ambos campos y limpieza del formulario sobre MariaDB local. También se comprobó Gato sin fechas, con período de alojamiento cubierto y no cubierto, y el aviso por fechas invertidas. La revisión de contactos y los filtros de visitas no forman parte de este bloque: [Registro y capturas de ubicación](pruebas-filtros-ubicacion-2026-11-12.md).
