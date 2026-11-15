@@ -332,7 +332,7 @@ enviar("form-register", async f => {
 enviar("form-login", async f => {
   await api("/api/auth/login", "POST", datosForm(f.id));
   versionSesion++; await refrescarSesion(); await token(); f.reset();
-  location.hash = usuario.rol === "CUIDADOR" ? "agenda" : "mascotas";
+  location.hash = "inicio";
 });
 el("salir").addEventListener("click", e => tarea(async () => {
   await api("/api/auth/logout", "POST"); limpiarSesion(); actualizarAcceso();
