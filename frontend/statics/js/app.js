@@ -100,15 +100,36 @@ async function refrescarSesion() {
   actualizarAcceso();
 }
 
+function mostrarModoCuenta(modo, activa=true) {
+  todos("[data-account-mode]").forEach(enlace => {
+    const seleccionado = activa && enlace.dataset.accountMode === modo;
+    enlace.classList.toggle("is-active", seleccionado);
+    if (seleccionado) enlace.setAttribute("aria-current", "page");
+    else enlace.removeAttribute("aria-current");
+  });
+}
+
+// Ambos formularios permanecen visibles; el foco indica la acción elegida.
+el("form-login").addEventListener("focusin", () => mostrarModoCuenta("login"));
+el("form-register").addEventListener("focusin", () => mostrarModoCuenta("register"));
+todos("[data-account-mode]").forEach(enlace => {
+  enlace.addEventListener("click", () => {
+    const modo = enlace.dataset.accountMode;
+    mostrarModoCuenta(modo);
+    el(modo === "register" ? "form-register" : "form-login").querySelector("input").focus({preventScroll:true});
+  });
+});
+
 async function navegar(enfocar=true) {
   const ancla = location.hash.slice(1);
-  let tab = ["como-funciona", "ayuda"].includes(ancla) ? "inicio" : ancla || "inicio";
+  let tab = ancla === "registro" ? "cuenta" : ["como-funciona", "ayuda"].includes(ancla) ? "inicio" : ancla || "inicio";
   const privados = {mascotas:"DUENO", agenda:"CUIDADOR", solicitudes:"AMBOS"};
   if (!el(`tab-${tab}`)) tab = "inicio";
   if (privados[tab] && (!usuario || (privados[tab] !== "AMBOS" && usuario.rol !== privados[tab]))) {
     tab = usuario ? "inicio" : "cuenta";
     history.replaceState(null, "", `#${tab}`);
   }
+  mostrarModoCuenta(ancla === "registro" ? "register" : "login", tab === "cuenta");
   todos(".page-section").forEach(n => { n.hidden = n.id !== `tab-${tab}`; });
   todos("[data-tab]").forEach(n => { if (n.dataset.tab === tab) n.setAttribute("aria-current", "page"); else n.removeAttribute("aria-current"); });
   el("mensaje").classList.add("d-none");
@@ -267,7 +288,8 @@ function enviar(id, callback) {
 enviar("form-register", async f => {
   await api("/api/auth/register", "POST", datosForm(f.id));
   el("form-login").elements.email.value = f.elements.email.value;
-  f.reset(); mensaje("Tu cuenta está creada. Ahora ingresá con tu email y contraseña.");
+  f.reset(); history.replaceState(null, "", "#cuenta"); mostrarModoCuenta("login");
+  mensaje("Tu cuenta está creada. Ahora ingresá con tu email y contraseña.");
 });
 enviar("form-login", async f => {
   await api("/api/auth/login", "POST", datosForm(f.id));

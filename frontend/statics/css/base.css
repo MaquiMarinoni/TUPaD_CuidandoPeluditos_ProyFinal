@@ -11,3 +11,11 @@
 @media(max-width:767px){.brand-logo{width:105px}.hero-editorial{grid-template-columns:1fr;min-height:0;border-radius:18px}.hero-editorial .hero-copy{padding:30px 24px}.hero-editorial h1{font-size:2.8rem}.hero-editorial .hero-photo{min-height:270px}.session-nav{max-width:64%;gap:4px}.session-nav .btn{font-size:.75rem;padding:.5rem .65rem}.access-link{font-size:.75rem;padding:6px}.search-fields{grid-template-columns:1fr}.service-choice label>span{padding:10px;font-size:.75rem}.date-fields label{flex:1}.btn-search{min-height:46px}}
 
 @media(max-width:767px){.home-search-panel{padding:18px;margin-top:20px}.home-help{grid-template-columns:1fr;gap:16px;padding-top:40px}.faq-intro h2{font-size:2rem}.faq-intro h2 br{display:none}.faq-intro p{max-width:none}.faq-list summary{padding:18px;font-size:.9rem}.faq-answer{padding:0 18px 18px}.footer-brand{align-items:start}.footer-paw{width:34px;height:34px}}
+
+/* Acceso: ambos formularios visibles; se destaca la acción elegida. */
+.account-choice{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:8px;background:#f4eff7;color:var(--pet-dark);font-size:.85rem;font-weight:600;text-decoration:none;transition:background-color .15s,color .15s}
+.account-choice:hover{background:#e7d8f0;color:#603c80}
+.account-choice.is-active{background:var(--pet-primary);color:#fff}
+.account-choice.is-active:hover{background:#603c80;color:#fff}
+@media(max-width:767px){.session-nav .account-choice{padding:8px 10px;font-size:.75rem}}
+@media(prefers-reduced-motion:reduce){.account-choice{transition:none}}
