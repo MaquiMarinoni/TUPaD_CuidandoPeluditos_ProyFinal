@@ -11,7 +11,7 @@ from backend.app.models import Incidencia, Solicitud
 incidencias_bp = Blueprint("incidencias", __name__, url_prefix="/api/incidencias")
 TIPOS = {"SALUD", "CONDUCTA", "EXTRAVIO", "OTRO"}
 CAMPOS_CREAR = {"solicitud_id", "tipo", "descripcion", "medidas_tomadas"}
-CAMPOS_RESOLVER = {"medidas_tomadas"}
+CAMPOS_RESOLVER = {"comentario_cierre"}
 
 
 def fallo(mensaje, codigo=400):
@@ -44,6 +44,7 @@ def incidencia_a_dict(incidencia):
         "tipo": incidencia.tipo,
         "descripcion": incidencia.descripcion,
         "medidas_tomadas": incidencia.medidas_tomadas,
+        "comentario_cierre": incidencia.comentario_cierre,
         "estado": incidencia.estado,
         "fecha_registro": incidencia.fecha_registro.isoformat() if incidencia.fecha_registro else None,
     }
@@ -134,7 +135,7 @@ def resolver(incidencia_id):
     if not isinstance(datos, dict) or set(datos) - CAMPOS_RESOLVER:
         return fallo("Datos JSON invalidos o campos no permitidos.")
     try:
-        medidas = texto(datos, "medidas_tomadas", obligatorio=True)
+        comentario = texto(datos, "comentario_cierre", obligatorio=True)
     except ValueError as exc:
         return fallo(str(exc))
     incidencia = db.session.scalar(
@@ -149,7 +150,7 @@ def resolver(incidencia_id):
     if incidencia.estado != "ABIERTA":
         db.session.rollback()
         return fallo("La incidencia ya fue resuelta.", 409)
-    incidencia.medidas_tomadas = medidas
+    incidencia.comentario_cierre = comentario
     incidencia.estado = "RESUELTA"
     db.session.commit()
     return jsonify({"mensaje": "Incidencia resuelta.", "incidencia": incidencia_a_dict(incidencia)}), 200

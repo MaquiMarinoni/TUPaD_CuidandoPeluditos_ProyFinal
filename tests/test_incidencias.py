@@ -74,11 +74,16 @@ def test_registro_consulta_y_resolucion(datos):
     assert creado.json["incidencia"]["estado"] == "ABIERTA"
     assert duena.get(f"/api/incidencias?solicitud_id={ids['servicio']}").json["incidencias"][0]["id"] == iid
     assert duena.get(f"/api/incidencias/{iid}").status_code == 200
-    assert duena.patch(f"/api/incidencias/{iid}/resolver", json={"medidas_tomadas": "Atendida."}).status_code == 403
-    cerrado = cuidador.patch(f"/api/incidencias/{iid}/resolver", json={"medidas_tomadas": "Veterinaria informada."})
+    assert duena.patch(f"/api/incidencias/{iid}/resolver", json={"comentario_cierre": "Atendida."}).status_code == 403
+    cerrado = cuidador.patch(f"/api/incidencias/{iid}/resolver", json={"comentario_cierre": "Veterinaria informada."})
     assert cerrado.status_code == 200, cerrado.json
     assert cerrado.json["incidencia"]["estado"] == "RESUELTA"
-    assert cuidador.patch(f"/api/incidencias/{iid}/resolver", json={"medidas_tomadas": "Otra."}).status_code == 409
+    assert cerrado.json["incidencia"]["medidas_tomadas"] == "Se informo al dueno."
+    assert cerrado.json["incidencia"]["comentario_cierre"] == "Veterinaria informada."
+    consultada = duena.get(f"/api/incidencias/{iid}").json["incidencia"]
+    assert consultada["medidas_tomadas"] == "Se informo al dueno."
+    assert consultada["comentario_cierre"] == "Veterinaria informada."
+    assert cuidador.patch(f"/api/incidencias/{iid}/resolver", json={"comentario_cierre": "Otra."}).status_code == 409
 
 
 def test_prohibir_ajenos_y_dueno_reportando(datos):
@@ -104,3 +109,36 @@ def test_requiere_sesion(datos):
     anonimo = app.test_client()
     assert anonimo.get(f"/api/incidencias?solicitud_id={ids['servicio']}").status_code == 401
     assert anonimo.post("/api/incidencias", json=payload(ids["servicio"])).status_code == 401
+
+
+@pytest.mark.parametrize("datos_cierre", [
+    {}, {"comentario_cierre": "   "}, {"comentario_cierre": "x" * 2001},
+    {"comentario_cierre": 123}, {"medidas_tomadas": "No sobrescribir"},
+    {"comentario_cierre": "Cierre", "medidas_tomadas": "Cambio"},
+])
+def test_cierre_invalido_no_cambia_medidas_ni_estado(datos, datos_cierre):
+    app, ids = datos
+    cuidador = cliente(app, "Carlos")
+    creado = cuidador.post("/api/incidencias", json=payload(ids["servicio"]))
+    iid = creado.json["incidencia"]["id"]
+    assert cuidador.patch(f"/api/incidencias/{iid}/resolver", json=datos_cierre).status_code == 400
+    actual = cuidador.get(f"/api/incidencias/{iid}").json["incidencia"]
+    assert actual["estado"] == "ABIERTA"
+    assert actual["medidas_tomadas"] == "Se informo al dueno."
+    assert actual["comentario_cierre"] is None
+
+
+def test_incidente_historico_sin_cierre_se_conserva(datos):
+    from backend.app.models import Incidencia
+    app, ids = datos
+    cuidador = cliente(app, "Carlos")
+    creado = cuidador.post("/api/incidencias", json=payload(ids["servicio"]))
+    iid = creado.json["incidencia"]["id"]
+    with app.app_context():
+        registro = db.session.get(Incidencia, iid)
+        registro.estado = "RESUELTA"
+        registro.medidas_tomadas = "Texto historico conservado"
+        db.session.commit()
+    consultada = cuidador.get(f"/api/incidencias/{iid}").json["incidencia"]
+    assert consultada["medidas_tomadas"] == "Texto historico conservado"
+    assert consultada["comentario_cierre"] is None

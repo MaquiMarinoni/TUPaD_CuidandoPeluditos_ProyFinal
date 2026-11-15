@@ -126,14 +126,16 @@ def main():
         check("Incidencia consultable por dueño", any(i["id"] == iid for i in data["incidencias"]))
         result_code(outsider.get(f"/api/incidencias?solicitud_id={sid}"), 404,
                     "Tercero no puede consultar incidencias")
-        result_code(owner.patch(f"/api/incidencias/{iid}/resolver", json={"medidas_tomadas": "X"}, headers=oh),
+        result_code(owner.patch(f"/api/incidencias/{iid}/resolver", json={"comentario_cierre": "X"}, headers=oh),
                     403, "Dueño no puede resolver incidencia")
         resolved = caregiver.patch(f"/api/incidencias/{iid}/resolver",
-                                   json={"medidas_tomadas": "Atención ficticia completada."}, headers=ch)
+                                   json={"comentario_cierre": "Atención ficticia completada."}, headers=ch)
         data = result_code(resolved, 200, "Cuidador resuelve incidencia")
         check("Incidencia final RESUELTA", data["incidencia"]["estado"] == "RESUELTA")
+        check("Medidas iniciales conservadas", data["incidencia"]["medidas_tomadas"] == payload["medidas_tomadas"])
+        check("Comentario de cierre separado", data["incidencia"]["comentario_cierre"] == "Atención ficticia completada.")
         result_code(caregiver.patch(f"/api/incidencias/{iid}/resolver",
-                                    json={"medidas_tomadas": "Repetir"}, headers=ch),
+                                    json={"comentario_cierre": "Repetir"}, headers=ch),
                     409, "No admite segunda resolución")
         result_code(owner.post("/api/incidencias", json=payload, headers=oh), 403,
                     "Dueño no puede reportar incidencia")
@@ -165,6 +167,7 @@ def main():
             i = db.session.get(Incidencia, iid)
             v = db.session.get(Valoracion, ids["valoracion"])
             check("Incidencia RESUELTA persistida en MariaDB", i is not None and i.estado == "RESUELTA")
+            check("Ambos textos persistidos en MariaDB", i.medidas_tomadas == payload["medidas_tomadas"] and i.comentario_cierre == "Atención ficticia completada.")
             check("Valoración de 5 estrellas persistida en MariaDB", v is not None and v.puntaje == 5)
         success = True
     finally:
@@ -196,10 +199,10 @@ def main():
 
     if success and cleanup_ok:
         print("TODAS LAS PRUEBAS P1 PASARON", flush=True)
-        evidence = Path("docs/evidencias/p1-mariadb-2026-11-12.txt")
+        evidence = Path("docs/evidencias/p1-cierre-mariadb.txt")
         evidence.parent.mkdir(parents=True, exist_ok=True)
         evidence.write_text(
-            "Cuidando Peluditos - Prueba P1 MariaDB - 12/11/2026\n"
+            "Cuidando Peluditos - Prueba P1 MariaDB con cierre separado\n"
             "Motor MariaDB/MySQL, base aislada _pruebas. Ejecución local con Flask test_client.\n"
             "Script: python -m scripts.prueba_p1_mariadb\n"
             + "\n".join(checks)

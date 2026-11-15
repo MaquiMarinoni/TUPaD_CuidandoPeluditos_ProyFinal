@@ -12,7 +12,7 @@ python -m flask --app backend.run:app db current --directory backend/migrations
 python -m flask --app backend.run:app db check --directory backend/migrations
 ```
 
-La revisión vigente es `c0af3fd5552a`. La estructura contiene diez tablas de dominio y `alembic_version`, que registra la revisión aplicada. `db check` debe informar `No new upgrade operations detected.` cuando modelos y esquema coinciden.
+La revisión vigente es `d18a6c2f904b`; agrega el comentario de cierre de incidencias sin reemplazar las medidas registradas. La estructura contiene diez tablas de dominio y `alembic_version`, que registra la revisión aplicada. `db check` debe informar `No new upgrade operations detected.` cuando modelos y esquema coinciden.
 
 La creación de la base, la cuenta de desarrollo y la configuración se explican en la [guía local con MariaDB](../docs/ejecucion-local-mariadb.md). El [ejemplo de variables](../.env.example) no contiene credenciales reales.
 

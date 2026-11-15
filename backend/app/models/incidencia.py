@@ -10,6 +10,7 @@ class Incidencia(db.Model):
     tipo = db.Column(db.String(30), nullable=False)  # 'SALUD', 'CONDUCTA', 'EXTRAVIO', 'OTRO'
     descripcion = db.Column(db.Text, nullable=False)
     medidas_tomadas = db.Column(db.Text, nullable=True)
+    comentario_cierre = db.Column(db.Text, nullable=True)
     estado = db.Column(db.String(20), default='ABIERTA', nullable=False)  # 'ABIERTA', 'RESUELTA'
     fecha_registro = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
