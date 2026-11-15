@@ -367,16 +367,28 @@ el("lista-mascotas").addEventListener("click", e => {
 enviar("form-buscar", async f => { filtrosInicio = null; el("detalle-cuidador").hidden = true; await cargarCuidadores(datosForm(f.id)); });
 el("limpiar-busqueda").addEventListener("click", e => tarea(async () => { el("form-buscar").reset(); filtrosInicio = null; el("detalle-cuidador").hidden = true; await cargarCuidadores(); }, e.currentTarget));
 el("lista-cuidadores").addEventListener("click", e => { const b = e.target.closest("[data-detalle]"); if (b) tarea(() => detalleCuidador(b.dataset.detalle), b); });
+function fechasParaSolicitud(disponibilidad, busqueda) {
+  if (busqueda?.modalidad === disponibilidad.modalidad && busqueda.fecha_desde) {
+    const salida = busqueda.modalidad === "VISITA" ? busqueda.fecha_desde : busqueda.fecha_hasta;
+    const rangoValido = salida && (busqueda.modalidad === "VISITA" || salida > busqueda.fecha_desde);
+    if (rangoValido && disponibilidad.desde <= busqueda.fecha_desde && disponibilidad.hasta >= salida) {
+      return {desde:busqueda.fecha_desde, hasta:salida};
+    }
+  }
+  return {desde:disponibilidad.desde, hasta:disponibilidad.hasta};
+}
+
 el("detalle-cuidador").addEventListener("click", e => {
   const b = e.target.closest("[data-reservar]"); if (!b) return;
   if (!usuario) { location.hash = "cuenta"; return; }
   tarea(async () => {
     const d = b.dataset;
+    const fechasElegidas = fechasParaSolicitud(d, filtrosInicio);
     // Cargar las opciones antes de seleccionar y navegar, para conservar el cuidador.
     await cargarCuidadores(); await cargarMascotas();
     const f = el("form-solicitud");
     f.elements.cuidador_id.value = d.reservar; f.elements.modalidad.value = d.modalidad;
-    f.elements.fecha_desde.value = d.desde; f.elements.fecha_hasta.value = d.hasta;
+    f.elements.fecha_desde.value = fechasElegidas.desde; f.elements.fecha_hasta.value = fechasElegidas.hasta;
     f.elements.hora_desde.value = d.horaDesde; f.elements.hora_hasta.value = d.horaHasta;
     actualizarModalidades(); location.hash = "solicitudes";
   }, b);
