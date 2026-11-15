@@ -19,3 +19,6 @@
 .account-choice.is-active:hover{background:#603c80;color:#fff}
 @media(max-width:767px){.session-nav .account-choice{padding:8px 10px;font-size:.75rem}}
 @media(prefers-reduced-motion:reduce){.account-choice{transition:none}}
+
+.main-nav a[data-tab="solicitudes"]{display:inline-flex;align-items:center;gap:7px}
+.pending-count{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 6px;border-radius:999px;background:var(--pet-primary);color:#fff;font-size:.72rem;font-weight:750;line-height:1}

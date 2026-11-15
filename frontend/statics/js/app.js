@@ -75,6 +75,7 @@ function confirmar(texto) {
 function limpiarSesion() {
   versionSesion++;
   usuario = null; csrf = null; mascotas = []; solicitudes = []; disponibilidades = []; tienePerfil = false;
+  consultaContador++; mostrarContadorSolicitudes();
   ["lista-mascotas", "lista-solicitudes", "mis-disponibilidades", "select-mascotas", "detalle-cuidador"].forEach(id => el(id).replaceChildren());
   el("detalle-cuidador").hidden = true;
   ["form-perfil", "form-solicitud", "form-agenda", "form-mascota", "form-login", "form-register"].forEach(id => el(id).reset());
@@ -95,10 +96,43 @@ function actualizarAcceso() {
   el("datos-cuenta").textContent = usuario ? `${usuario.nombre} ${usuario.apellido} · ${usuario.email}` : "";
 }
 
+// Pendientes de respuesta, no notificaciones no leídas.
+let consultaContador = 0;
+function mostrarContadorSolicitudes(cantidad=null) {
+  const contador = el("contador-solicitudes");
+  const enlace = contador.closest("a");
+  const disponible = usuario && cantidad !== null;
+  const descripcion = disponible ? `${cantidad} ${cantidad === 1 ? "solicitud pendiente" : "solicitudes pendientes"} ${usuario.rol === "CUIDADOR" ? "de tu respuesta" : "de respuesta del cuidador"}` : "";
+  contador.hidden = !disponible || cantidad === 0;
+  contador.textContent = disponible ? String(cantidad) : "";
+  if (disponible) {
+    enlace.setAttribute("aria-label", `Mis solicitudes: ${descripcion}`);
+    enlace.title = descripcion;
+  } else {
+    enlace.removeAttribute("aria-label");
+    enlace.removeAttribute("title");
+  }
+  if (el("aviso-solicitudes").textContent !== descripcion) el("aviso-solicitudes").textContent = descripcion;
+}
+
+async function refrescarContadorSolicitudes() {
+  const consulta = ++consultaContador;
+  const version = versionSesion;
+  if (!usuario || !["DUENO", "CUIDADOR"].includes(usuario.rol)) { mostrarContadorSolicitudes(); return; }
+  try {
+    const r = await api("/api/solicitudes");
+    if (consulta !== consultaContador || version !== versionSesion || !usuario) return;
+    mostrarContadorSolicitudes(r.solicitudes.filter(s => s.estado === "PENDIENTE").length);
+  } catch {
+    if (consulta === consultaContador && version === versionSesion) mostrarContadorSolicitudes();
+  }
+}
+
 async function refrescarSesion() {
   const r = await api("/api/auth/me");
   usuario = r.autenticado ? r.usuario : null;
   actualizarAcceso();
+  await refrescarContadorSolicitudes();
 }
 
 function mostrarModoCuenta(modo, activa=true) {
@@ -247,7 +281,10 @@ async function cargarSolicitudes() {
   const version = versionSesion;
   const r = await api("/api/solicitudes");
   if (version !== versionSesion) return;
-  solicitudes = r.solicitudes; mostrarSolicitudes();
+  solicitudes = r.solicitudes;
+  consultaContador++;
+  mostrarContadorSolicitudes(solicitudes.filter(s => s.estado === "PENDIENTE").length);
+  mostrarSolicitudes();
 }
 
 function actualizarModalidades() {
@@ -431,3 +468,12 @@ enviar("form-inicio", async f => {
 });
 el("form-inicio").addEventListener("change", actualizarBuscadorInicio);
 actualizarBuscadorInicio();
+
+// Actualiza el aviso sin reemplazar formularios ni tarjetas que se estén usando.
+window.addEventListener("focus", () => { if (usuario) refrescarContadorSolicitudes(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && usuario) refrescarContadorSolicitudes();
+});
+setInterval(() => {
+  if (document.visibilityState === "visible" && usuario) refrescarContadorSolicitudes();
+}, 60000);
