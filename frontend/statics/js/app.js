@@ -216,7 +216,7 @@ async function cargarCuidadores(filtros={}) {
   cuidadores = resultados;
   const resumen = filtrosInicio ? ` · ${filtrosInicio.modalidad === "VISITA" ? "Visitas a domicilio" : "Alojamiento"}${filtrosInicio.especie ? ` · ${filtrosInicio.especie === "PERRO" ? "Perro" : "Gato"}` : ""}${filtrosInicio.fecha_desde ? ` · ${fecha(filtrosInicio.fecha_desde)}${filtrosInicio.modalidad === "ALOJAMIENTO" ? ` al ${fecha(filtrosInicio.fecha_hasta)}` : ""}` : ""}. Cupo sujeto a confirmación.` : "";
   el("cantidad-cuidadores").textContent = `${cuidadores.length} ${cuidadores.length === 1 ? "cuidador encontrado" : "cuidadores encontrados"}${resumen}`;
-  el("lista-cuidadores").innerHTML = cuidadores.length ? cuidadores.map(c => `<div class="col-md-6 col-xl-4"><article class="panel caregiver-card"><div class="d-flex align-items-center gap-3"><span class="caregiver-avatar" aria-hidden="true">${html(c.nombre.slice(0,1))}${html(c.apellido.slice(0,1))}</span><div><h2 class="mb-1">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.localidad)}, ${html(c.provincia)}</p></div></div><p>${html(c.descripcion || "Un espacio para cuidar con cariño.")}</p><div class="tags">${c.admite_perros ? '<span class="tag">Perros</span>' : ""}${c.admite_gatos ? '<span class="tag">Gatos</span>' : ""}<span class="tag">Hasta ${c.capacidad_maxima} mascotas</span></div><div class="price-grid"><p>Alojamiento<strong>${dinero(c.tarifa_diaria)}</strong><small>por mascota / noche</small></p><p>Visita<strong>${dinero(c.tarifa_visita)}</strong><small>por turno</small></p></div><button class="btn btn-outline-primary" data-detalle="${c.id}">Conocer y ver disponibilidad</button></article></div>`).join("") : `<div class="col-12">${vacio("No encontramos cuidadores", "Probá con otra localidad o limpiá los filtros.")}</div>`;
+  el("lista-cuidadores").innerHTML = cuidadores.length ? cuidadores.map(c => `<div class="col-md-6 col-xl-4"><article class="panel caregiver-card"><div class="d-flex align-items-center gap-3"><span class="caregiver-avatar" aria-hidden="true">${html(c.nombre.slice(0,1))}${html(c.apellido.slice(0,1))}</span><div><h2 class="mb-1">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.localidad)}, ${html(c.provincia)}</p></div></div><p>${html(c.descripcion || "Un espacio para cuidar con cariño.")}</p><div class="tags">${c.admite_perros ? '<span class="tag">Perros</span>' : ""}${c.admite_gatos ? '<span class="tag">Gatos</span>' : ""}<span class="tag">Hasta ${c.capacidad_maxima} mascotas</span></div><div class="price-grid"><p>Alojamiento<strong>${dinero(c.tarifa_diaria)}</strong><small>por mascota / noche</small></p><p>Visita<strong>${dinero(c.tarifa_visita)}</strong><small>por mascota / 60 minutos</small></p></div><button class="btn btn-outline-primary" data-detalle="${c.id}">Conocer y ver disponibilidad</button></article></div>`).join("") : `<div class="col-12">${vacio("No encontramos cuidadores", "Probá con otra localidad o limpiá los filtros.")}</div>`;
   const previo = el("select-cuidador").value;
   el("select-cuidador").innerHTML = '<option value="">Elegí un cuidador</option>' + cuidadores.map(c => `<option value="${c.id}">${html(c.nombre)} ${html(c.apellido)} · ${html(c.localidad)}</option>`).join("");
   if (cuidadores.some(c => String(c.id) === previo)) el("select-cuidador").value = previo;
@@ -305,15 +305,27 @@ function actualizarModalidades() {
   estimar();
 }
 
+function finVisita60(inicio) {
+  if (!/^\d{2}:\d{2}$/.test(inicio)) return "";
+  const [h, m] = inicio.split(":").map(Number);
+  if (h > 22 || m > 59) return "";
+  return `${String(h + 1).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
 function estimar() {
   const f = el("form-solicitud");
   const c = cuidadores.find(c => String(c.id) === f.elements.cuidador_id.value);
   const cantidad = todos('[name="mascota_id"]:checked').length;
   const visita = f.elements.modalidad.value === "VISITA";
+  const fin = finVisita60(f.elements.hora_desde.value);
+  f.elements.hora_desde.setCustomValidity(visita && f.elements.hora_desde.value && !fin ? "La visita de 60 minutos debe terminar el mismo día." : "");
+  if (visita) f.elements.hora_hasta.value = fin;
+  const opcion = document.querySelector('[name="mascota_id"]');
+  if (opcion) opcion.setCustomValidity(visita && cantidad > 3 ? "Seleccioná hasta 3 mascotas por visita." : "");
   const noches = Math.round((new Date(`${f.elements.fecha_hasta.value}T12:00:00`) - new Date(`${f.elements.fecha_desde.value}T12:00:00`))/86400000);
   let texto = "Elegí cuidador, fechas y mascotas para estimar el total.";
   if (c && cantidad && f.elements.fecha_desde.value) {
-    if (visita) texto = c.tarifa_visita == null ? "Este cuidador no ofrece visitas." : `Total estimado: ${dinero(c.tarifa_visita)} por turno.`;
+    if (visita) texto = c.tarifa_visita == null ? "Este cuidador no ofrece visitas." : `Total estimado: ${dinero(Number(c.tarifa_visita) * cantidad)} · ${cantidad} mascota(s) × visita de 60 minutos.`;
     else if (noches > 0) texto = `Total estimado: ${dinero(Number(c.tarifa_diaria) * cantidad * noches)} · ${cantidad} mascota(s) × ${noches} noche(s).`;
   }
   el("estimacion").textContent = `${texto} El importe definitivo lo confirma el sistema al enviar.`;

@@ -1,5 +1,5 @@
 
-from datetime import date
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 
 from flask import Blueprint, jsonify, request
@@ -68,10 +68,12 @@ def validar(datos):
 
     fecha = fecha_visita(datos.get("fecha"))
     inicio = hora_visita(datos.get("hora_desde"))
-    fin = hora_visita(datos.get("hora_hasta"))
-
-    if fin <= inicio:
-        raise ValueError("La hora final debe ser posterior al inicio.")
+    final = datetime.combine(fecha, inicio) + timedelta(minutes=60)
+    if final.date() != fecha:
+        raise ValueError("La visita de 60 minutos debe terminar el mismo dia.")
+    fin = final.time()
+    if "hora_hasta" in datos and hora_visita(datos["hora_hasta"]) != fin:
+        raise ValueError("Las visitas duran exactamente 60 minutos.")
 
     if fecha < date.today():
         raise ValueError("No se permiten visitas en fechas pasadas.")
@@ -80,11 +82,11 @@ def validar(datos):
 
     if (
         not isinstance(ids, list)
-        or not 1 <= len(ids) <= 20
+        or not 1 <= len(ids) <= 3
         or any(type(i) is not int or i <= 0 for i in ids)
         or len(ids) != len(set(ids))
     ):
-        raise ValueError("La lista de mascotas no es valida.")
+        raise ValueError("Selecciona entre 1 y 3 mascotas distintas del mismo dueño.")
 
     direccion = datos.get("direccion_servicio")
 
@@ -251,7 +253,7 @@ def crear_visita():
             hora_hasta=datos["hora_hasta"],
             estado="PENDIENTE",
             total_mascotas=len(mascotas),
-            monto_total=perfil.tarifa_visita,
+            monto_total=perfil.tarifa_visita * len(mascotas),
             contacto_emergencia=datos["contacto_emergencia"],
             veterinario_emergencia=datos["veterinario_emergencia"],
             autorizacion_urgencia=datos["autorizacion_urgencia"],

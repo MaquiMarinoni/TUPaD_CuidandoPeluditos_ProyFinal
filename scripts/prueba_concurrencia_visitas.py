@@ -222,11 +222,11 @@ def main():
     milo = crear_mascota(beto, "Milo")
 
     visita_ana = datos_visita(
-        cuidador_id, fecha_texto, luna, "10:00", "11:30"
+        cuidador_id, fecha_texto, luna, "10:00", "11:00"
     )
 
     visita_beto = datos_visita(
-        cuidador_id, fecha_texto, milo, "11:00", "12:00"
+        cuidador_id, fecha_texto, milo, "10:30", "11:30"
     )
 
     codigo, respuesta = ana.enviar(
