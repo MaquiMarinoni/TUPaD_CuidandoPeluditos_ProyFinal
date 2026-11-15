@@ -84,6 +84,7 @@ function limpiarSesion() {
 }
 
 function actualizarAcceso() {
+  todos("[data-owner-view]").forEach(n => { n.hidden = usuario?.rol === "CUIDADOR"; });
   todos("[data-role]").forEach(n => { n.hidden = usuario?.rol !== n.dataset.role; });
   todos("[data-auth]").forEach(n => { n.hidden = !usuario; });
   todos("[data-guest]").forEach(n => { n.hidden = Boolean(usuario); });
