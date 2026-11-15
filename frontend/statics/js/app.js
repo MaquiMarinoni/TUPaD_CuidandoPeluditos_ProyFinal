@@ -477,3 +477,16 @@ document.addEventListener("visibilitychange", () => {
 setInterval(() => {
   if (document.visibilityState === "visible" && usuario) refrescarContadorSolicitudes();
 }, 60000);
+
+// Atajo al encabezado sin cambiar de pantalla ni borrar formularios.
+function actualizarVolverArriba() {
+  el("volver-arriba").hidden = window.scrollY < 400;
+}
+window.addEventListener("scroll", actualizarVolverArriba, {passive:true});
+window.addEventListener("pageshow", actualizarVolverArriba);
+el("volver-arriba").addEventListener("click", () => {
+  document.querySelector(".site-header .brand").focus({preventScroll:true});
+  const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({top:0, behavior:reducirMovimiento ? "instant" : "smooth"});
+});
+actualizarVolverArriba();
