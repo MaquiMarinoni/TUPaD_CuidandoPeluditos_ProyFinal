@@ -208,7 +208,7 @@ async function cargarCuidadores(filtros={}) {
     if (f.fecha_desde) {
       const compatibles = await Promise.all(resultados.map(async c => {
         const r = await api(`/api/cuidadores/${c.id}/disponibilidades`);
-        return r.disponibilidades.some(d => d.modalidad === f.modalidad && d.fecha_desde <= f.fecha_desde && d.fecha_hasta >= (f.modalidad === "VISITA" ? f.fecha_desde : f.fecha_hasta));
+        return r.disponibilidades.some(d => d.modalidad === f.modalidad && d.fecha_desde <= f.fecha_desde && d.fecha_hasta >= (f.modalidad === "VISITA" ? f.fecha_desde : f.fecha_hasta) && (d.modalidad !== "ALOJAMIENTO" || cubreCupo(d.tramos_cupo, f.fecha_desde, f.fecha_hasta)));
       }));
       resultados = resultados.filter((c, i) => compatibles[i]);
     }
@@ -222,11 +222,30 @@ async function cargarCuidadores(filtros={}) {
   if (cuidadores.some(c => String(c.id) === previo)) el("select-cuidador").value = previo;
 }
 
+function cubreCupo(tramos, desde, hasta) {
+  // Compatibilidad con respuestas anteriores al resumen de cupos.
+  if (!tramos) return true;
+  let cursor = desde;
+  for (const t of tramos) {
+    if (t.fecha_hasta <= cursor) continue;
+    if (t.fecha_desde > cursor || t.plazas_libres < 1) return false;
+    cursor = t.fecha_hasta;
+    if (cursor >= hasta) return true;
+  }
+  return false;
+}
+
+function resumenCupos(d) {
+  if (d.modalidad !== "ALOJAMIENTO" || !d.tramos_cupo) return "";
+  if (!d.tramos_cupo.length) return '<p class="field-note mb-0">Este período ya terminó.</p>';
+  return `<ul class="field-note mb-0">${d.tramos_cupo.map(t => `<li>${fecha(t.fecha_desde)} al ${fecha(t.fecha_hasta)}: ${t.plazas_libres ? `${t.plazas_libres} ${t.plazas_libres === 1 ? "plaza libre" : "plazas libres"}` : "sin cupo"}</li>`).join("")}</ul>`;
+}
+
 async function detalleCuidador(id) {
   const c = (await api(`/api/cuidadores/${id}`)).cuidador;
   const ds = (await api(`/api/cuidadores/${id}/disponibilidades`)).disponibilidades;
   const nodo = el("detalle-cuidador"); nodo.hidden = false;
-  nodo.innerHTML = `<h2 class="h4">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.condiciones_convivencia || "Sin condiciones de convivencia adicionales.")}</p><h3 class="h6">Disponibilidad publicada</h3>${ds.length ? ds.map(d => `<div class="list-entry d-flex flex-wrap gap-3 justify-content-between align-items-center"><div><strong>${d.modalidad === "VISITA" ? "Visita a domicilio" : "Alojamiento"}</strong><div class="field-note">${fecha(d.fecha_desde)} al ${fecha(d.fecha_hasta)}${d.hora_desde ? ` · ${html(d.hora_desde)}–${html(d.hora_hasta)}` : ""}</div></div>${!usuario || usuario.rol === "DUENO" ? `<button class="btn btn-primary btn-sm" data-reservar="${c.id}" data-modalidad="${d.modalidad}" data-desde="${d.fecha_desde}" data-hasta="${d.fecha_hasta}" data-hora-desde="${d.hora_desde || ""}" data-hora-hasta="${d.hora_hasta || ""}">Solicitar cuidado</button>` : ""}</div>`).join("") : vacio("Aún no hay fechas publicadas", "Volvé a consultar más adelante.")}<p class="field-note mt-3 mb-0">La disponibilidad publicada está sujeta a las reservas aceptadas. El sistema comprueba el cupo al procesar tu solicitud.</p>`;
+  nodo.innerHTML = `<h2 class="h4">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.condiciones_convivencia || "Sin condiciones de convivencia adicionales.")}</p><h3 class="h6">Disponibilidad publicada</h3>${ds.length ? ds.map(d => `<div class="list-entry d-flex flex-wrap gap-3 justify-content-between align-items-center"><div><strong>${d.modalidad === "VISITA" ? "Visita a domicilio" : "Alojamiento"}</strong><div class="field-note">${fecha(d.fecha_desde)} al ${fecha(d.fecha_hasta)}${d.hora_desde ? ` · ${html(d.hora_desde)}–${html(d.hora_hasta)}` : ""}</div>${resumenCupos(d)}</div>${(!usuario || usuario.rol === "DUENO") && (d.modalidad !== "ALOJAMIENTO" || !d.tramos_cupo || d.tramos_cupo.some(t => t.plazas_libres > 0)) ? `<button class="btn btn-primary btn-sm" data-reservar="${c.id}" data-modalidad="${d.modalidad}" data-desde="${d.fecha_desde}" data-hasta="${d.fecha_hasta}" data-hora-desde="${d.hora_desde || ""}" data-hora-hasta="${d.hora_hasta || ""}">Solicitar cuidado</button>` : ""}</div>`).join("") : vacio("Aún no hay fechas publicadas", "Volvé a consultar más adelante.")}<p class="field-note mt-3 mb-0">Las plazas corresponden a cada noche; el día de salida no consume una plaza. El resumen puede cambiar con nuevas reservas. El sistema vuelve a comprobar el cupo de todas tus mascotas al aceptar la solicitud.</p>`;
   nodo.focus(); nodo.scrollIntoView({behavior:"smooth", block:"start"});
 }
 
