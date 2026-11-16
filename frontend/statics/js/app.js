@@ -87,10 +87,10 @@ function limpiarSesion() {
 function actualizarAcceso() {
   todos("[data-owner-view]").forEach(n => { n.hidden = usuario?.rol === "CUIDADOR"; });
   todos("[data-role]").forEach(n => { n.hidden = usuario?.rol !== n.dataset.role; });
-  todos("[data-auth]").forEach(n => { n.hidden = !usuario; });
+  todos("[data-auth]").forEach(n => { n.hidden = !usuario || !["DUENO", "CUIDADOR"].includes(usuario.rol); });
   todos("[data-guest]").forEach(n => { n.hidden = Boolean(usuario); });
   el("usuario-actual").hidden = !usuario;
-  el("usuario-actual").textContent = usuario ? `${usuario.nombre} · ${usuario.rol === "DUENO" ? "Dueño" : "Cuidador"}` : "";
+  el("usuario-actual").textContent = usuario ? `${usuario.nombre} · ${({DUENO:"Dueño", CUIDADOR:"Cuidador", ADMIN:"Administrador"})[usuario.rol] || usuario.rol}` : "";
   el("salir").hidden = !usuario; el("acceso").hidden = Boolean(usuario);
   el("cuenta-activa").hidden = !usuario; el("formularios-cuenta").hidden = Boolean(usuario);
   el("datos-cuenta").textContent = usuario ? `${usuario.nombre} ${usuario.apellido} · ${usuario.email}` : "";
@@ -160,7 +160,7 @@ async function navegar(enfocar=true) {
   let tab = ancla === "registro" ? "cuenta" : ["como-funciona", "ayuda"].includes(ancla) ? "inicio" : ancla || "inicio";
   const privados = {mascotas:"DUENO", agenda:"CUIDADOR", solicitudes:"AMBOS"};
   if (!el(`tab-${tab}`)) tab = "inicio";
-  if (privados[tab] && (!usuario || (privados[tab] !== "AMBOS" && usuario.rol !== privados[tab]))) {
+  if (privados[tab] && (!usuario || (privados[tab] === "AMBOS" ? !["DUENO", "CUIDADOR"].includes(usuario.rol) : usuario.rol !== privados[tab]))) {
     tab = usuario ? "inicio" : "cuenta";
     history.replaceState(null, "", `#${tab}`);
   }
@@ -363,6 +363,7 @@ enviar("form-register", async f => {
 enviar("form-login", async f => {
   await api("/api/auth/login", "POST", datosForm(f.id));
   versionSesion++; await refrescarSesion(); await token(); f.reset();
+  if (usuario?.rol === "ADMIN") { location.assign("/admin"); return; }
   location.hash = "inicio";
 });
 el("salir").addEventListener("click", e => tarea(async () => {
