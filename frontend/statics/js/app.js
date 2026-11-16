@@ -208,7 +208,7 @@ async function cargarCuidadores(filtros={}) {
     if (f.fecha_desde) {
       const compatibles = await Promise.all(resultados.map(async c => {
         const r = await api(`/api/cuidadores/${c.id}/disponibilidades`);
-        return r.disponibilidades.some(d => d.modalidad === f.modalidad && d.fecha_desde <= f.fecha_desde && d.fecha_hasta >= (f.modalidad === "VISITA" ? f.fecha_desde : f.fecha_hasta));
+        return r.disponibilidades.some(d => d.modalidad === f.modalidad && d.fecha_desde <= f.fecha_desde && d.fecha_hasta >= (f.modalidad === "VISITA" ? f.fecha_desde : f.fecha_hasta) && (d.modalidad !== "ALOJAMIENTO" || cubreCupo(d.tramos_cupo, f.fecha_desde, f.fecha_hasta)));
       }));
       resultados = resultados.filter((c, i) => compatibles[i]);
     }
@@ -216,17 +216,36 @@ async function cargarCuidadores(filtros={}) {
   cuidadores = resultados;
   const resumen = filtrosInicio ? ` · ${filtrosInicio.modalidad === "VISITA" ? "Visitas a domicilio" : "Alojamiento"}${filtrosInicio.especie ? ` · ${filtrosInicio.especie === "PERRO" ? "Perro" : "Gato"}` : ""}${filtrosInicio.fecha_desde ? ` · ${fecha(filtrosInicio.fecha_desde)}${filtrosInicio.modalidad === "ALOJAMIENTO" ? ` al ${fecha(filtrosInicio.fecha_hasta)}` : ""}` : ""}. Cupo sujeto a confirmación.` : "";
   el("cantidad-cuidadores").textContent = `${cuidadores.length} ${cuidadores.length === 1 ? "cuidador encontrado" : "cuidadores encontrados"}${resumen}`;
-  el("lista-cuidadores").innerHTML = cuidadores.length ? cuidadores.map(c => `<div class="col-md-6 col-xl-4"><article class="panel caregiver-card"><div class="d-flex align-items-center gap-3"><span class="caregiver-avatar" aria-hidden="true">${html(c.nombre.slice(0,1))}${html(c.apellido.slice(0,1))}</span><div><h2 class="mb-1">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.localidad)}, ${html(c.provincia)}</p></div></div><p>${html(c.descripcion || "Un espacio para cuidar con cariño.")}</p><div class="tags">${c.admite_perros ? '<span class="tag">Perros</span>' : ""}${c.admite_gatos ? '<span class="tag">Gatos</span>' : ""}<span class="tag">Hasta ${c.capacidad_maxima} mascotas</span></div><div class="price-grid"><p>Alojamiento<strong>${dinero(c.tarifa_diaria)}</strong><small>por mascota / noche</small></p><p>Visita<strong>${dinero(c.tarifa_visita)}</strong><small>por turno</small></p></div><button class="btn btn-outline-primary" data-detalle="${c.id}">Conocer y ver disponibilidad</button></article></div>`).join("") : `<div class="col-12">${vacio("No encontramos cuidadores", "Probá con otra localidad o limpiá los filtros.")}</div>`;
+  el("lista-cuidadores").innerHTML = cuidadores.length ? cuidadores.map(c => `<div class="col-md-6 col-xl-4"><article class="panel caregiver-card"><div class="d-flex align-items-center gap-3"><span class="caregiver-avatar" aria-hidden="true">${html(c.nombre.slice(0,1))}${html(c.apellido.slice(0,1))}</span><div><h2 class="mb-1">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.localidad)}, ${html(c.provincia)}</p></div></div><p>${html(c.descripcion || "Un espacio para cuidar con cariño.")}</p><div class="tags">${c.admite_perros ? '<span class="tag">Perros</span>' : ""}${c.admite_gatos ? '<span class="tag">Gatos</span>' : ""}<span class="tag">Hasta ${c.capacidad_maxima} mascotas</span></div><div class="price-grid"><p>Alojamiento<strong>${dinero(c.tarifa_diaria)}</strong><small>por mascota / noche</small></p><p>Visita<strong>${dinero(c.tarifa_visita)}</strong><small>por mascota / 60 minutos</small></p></div><button class="btn btn-outline-primary" data-detalle="${c.id}">Conocer y ver disponibilidad</button></article></div>`).join("") : `<div class="col-12">${vacio("No encontramos cuidadores", "Probá con otra localidad o limpiá los filtros.")}</div>`;
   const previo = el("select-cuidador").value;
   el("select-cuidador").innerHTML = '<option value="">Elegí un cuidador</option>' + cuidadores.map(c => `<option value="${c.id}">${html(c.nombre)} ${html(c.apellido)} · ${html(c.localidad)}</option>`).join("");
   if (cuidadores.some(c => String(c.id) === previo)) el("select-cuidador").value = previo;
+}
+
+function cubreCupo(tramos, desde, hasta) {
+  // Compatibilidad con respuestas anteriores al resumen de cupos.
+  if (!tramos) return true;
+  let cursor = desde;
+  for (const t of tramos) {
+    if (t.fecha_hasta <= cursor) continue;
+    if (t.fecha_desde > cursor || t.plazas_libres < 1) return false;
+    cursor = t.fecha_hasta;
+    if (cursor >= hasta) return true;
+  }
+  return false;
+}
+
+function resumenCupos(d) {
+  if (d.modalidad !== "ALOJAMIENTO" || !d.tramos_cupo) return "";
+  if (!d.tramos_cupo.length) return '<p class="field-note mb-0">Este período ya terminó.</p>';
+  return `<ul class="field-note mb-0">${d.tramos_cupo.map(t => `<li>${fecha(t.fecha_desde)} al ${fecha(t.fecha_hasta)}: ${t.plazas_libres ? `${t.plazas_libres} ${t.plazas_libres === 1 ? "plaza libre" : "plazas libres"}` : "sin cupo"}</li>`).join("")}</ul>`;
 }
 
 async function detalleCuidador(id) {
   const c = (await api(`/api/cuidadores/${id}`)).cuidador;
   const ds = (await api(`/api/cuidadores/${id}/disponibilidades`)).disponibilidades;
   const nodo = el("detalle-cuidador"); nodo.hidden = false;
-  nodo.innerHTML = `<h2 class="h4">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.condiciones_convivencia || "Sin condiciones de convivencia adicionales.")}</p><h3 class="h6">Disponibilidad publicada</h3>${ds.length ? ds.map(d => `<div class="list-entry d-flex flex-wrap gap-3 justify-content-between align-items-center"><div><strong>${d.modalidad === "VISITA" ? "Visita a domicilio" : "Alojamiento"}</strong><div class="field-note">${fecha(d.fecha_desde)} al ${fecha(d.fecha_hasta)}${d.hora_desde ? ` · ${html(d.hora_desde)}–${html(d.hora_hasta)}` : ""}</div></div>${!usuario || usuario.rol === "DUENO" ? `<button class="btn btn-primary btn-sm" data-reservar="${c.id}" data-modalidad="${d.modalidad}" data-desde="${d.fecha_desde}" data-hasta="${d.fecha_hasta}" data-hora-desde="${d.hora_desde || ""}" data-hora-hasta="${d.hora_hasta || ""}">Solicitar cuidado</button>` : ""}</div>`).join("") : vacio("Aún no hay fechas publicadas", "Volvé a consultar más adelante.")}<p class="field-note mt-3 mb-0">La disponibilidad publicada está sujeta a las reservas aceptadas. El sistema comprueba el cupo al procesar tu solicitud.</p>`;
+  nodo.innerHTML = `<h2 class="h4">${html(c.nombre)} ${html(c.apellido)}</h2><p>${html(c.condiciones_convivencia || "Sin condiciones de convivencia adicionales.")}</p><h3 class="h6">Disponibilidad publicada</h3>${ds.length ? ds.map(d => `<div class="list-entry d-flex flex-wrap gap-3 justify-content-between align-items-center"><div><strong>${d.modalidad === "VISITA" ? "Visita a domicilio" : "Alojamiento"}</strong><div class="field-note">${fecha(d.fecha_desde)} al ${fecha(d.fecha_hasta)}${d.hora_desde ? ` · ${html(d.hora_desde)}–${html(d.hora_hasta)}` : ""}</div>${resumenCupos(d)}</div>${(!usuario || usuario.rol === "DUENO") && (d.modalidad !== "ALOJAMIENTO" || !d.tramos_cupo || d.tramos_cupo.some(t => t.plazas_libres > 0)) ? `<button class="btn btn-primary btn-sm" data-reservar="${c.id}" data-modalidad="${d.modalidad}" data-desde="${d.fecha_desde}" data-hasta="${d.fecha_hasta}" data-hora-desde="${d.hora_desde || ""}" data-hora-hasta="${d.hora_hasta || ""}">Solicitar cuidado</button>` : ""}</div>`).join("") : vacio("Aún no hay fechas publicadas", "Volvé a consultar más adelante.")}<p class="field-note mt-3 mb-0">Las plazas corresponden a cada noche; el día de salida no consume una plaza. El resumen puede cambiar con nuevas reservas. El sistema vuelve a comprobar el cupo de todas tus mascotas al aceptar la solicitud.</p>`;
   nodo.focus(); nodo.scrollIntoView({behavior:"smooth", block:"start"});
 }
 
@@ -305,15 +324,27 @@ function actualizarModalidades() {
   estimar();
 }
 
+function finVisita60(inicio) {
+  if (!/^\d{2}:\d{2}$/.test(inicio)) return "";
+  const [h, m] = inicio.split(":").map(Number);
+  if (h > 22 || m > 59) return "";
+  return `${String(h + 1).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
 function estimar() {
   const f = el("form-solicitud");
   const c = cuidadores.find(c => String(c.id) === f.elements.cuidador_id.value);
   const cantidad = todos('[name="mascota_id"]:checked').length;
   const visita = f.elements.modalidad.value === "VISITA";
+  const fin = finVisita60(f.elements.hora_desde.value);
+  f.elements.hora_desde.setCustomValidity(visita && f.elements.hora_desde.value && !fin ? "La visita de 60 minutos debe terminar el mismo día." : "");
+  if (visita) f.elements.hora_hasta.value = fin;
+  const opcion = document.querySelector('[name="mascota_id"]');
+  if (opcion) opcion.setCustomValidity(visita && cantidad > 3 ? "Seleccioná hasta 3 mascotas por visita." : "");
   const noches = Math.round((new Date(`${f.elements.fecha_hasta.value}T12:00:00`) - new Date(`${f.elements.fecha_desde.value}T12:00:00`))/86400000);
   let texto = "Elegí cuidador, fechas y mascotas para estimar el total.";
   if (c && cantidad && f.elements.fecha_desde.value) {
-    if (visita) texto = c.tarifa_visita == null ? "Este cuidador no ofrece visitas." : `Total estimado: ${dinero(c.tarifa_visita)} por turno.`;
+    if (visita) texto = c.tarifa_visita == null ? "Este cuidador no ofrece visitas." : `Total estimado: ${dinero(Number(c.tarifa_visita) * cantidad)} · ${cantidad} mascota(s) × visita de 60 minutos.`;
     else if (noches > 0) texto = `Total estimado: ${dinero(Number(c.tarifa_diaria) * cantidad * noches)} · ${cantidad} mascota(s) × ${noches} noche(s).`;
   }
   el("estimacion").textContent = `${texto} El importe definitivo lo confirma el sistema al enviar.`;

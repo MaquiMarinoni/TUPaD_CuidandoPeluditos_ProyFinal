@@ -162,7 +162,7 @@ def main():
     milo = mascota(beto, "Milo")
 
     datos_ana = datos_visita(
-        cuidador_id, fecha, "10:00", "11:30",
+        cuidador_id, fecha, "10:00", "11:00",
         [luna, toby]
     )
 
@@ -179,9 +179,9 @@ def main():
         "VISITA",
     )
     comprobar(
-        "Precio por turno",
+        "Precio por mascota en visita de 60 minutos",
         float(respuesta["solicitud"]["monto_total"]),
-        80.0,
+        160.0,
     )
     comprobar(
         "Cantidad de mascotas",
@@ -196,7 +196,7 @@ def main():
 
     # Otra solicitud puede quedar pendiente.
     datos_beto = datos_visita(
-        cuidador_id, fecha, "11:00", "12:00", [milo]
+        cuidador_id, fecha, "10:30", "11:30", [milo]
     )
 
     codigo, respuesta = beto.enviar(
@@ -216,7 +216,7 @@ def main():
         "ACEPTADA",
     )
 
-    # La segunda se superpone entre 11:00 y 11:30.
+    # La segunda se superpone entre 10:30 y 11:00.
     codigo, _ = carlos.enviar(
         "POST", f"/api/solicitudes/{visita_beto}/aceptar"
     )

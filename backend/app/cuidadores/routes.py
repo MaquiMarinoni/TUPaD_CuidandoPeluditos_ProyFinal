@@ -6,7 +6,8 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 
 from backend.app.extensions import db
-from backend.app.models import PerfilCuidador, Usuario, Disponibilidad
+from backend.app.models import PerfilCuidador, Usuario, Disponibilidad, Solicitud
+from backend.app.cupos_publicos import tramos_cupo
 from backend.app.disponibilidades.routes import disponibilidad_a_dict
 
 from backend.app.integridad_reservas import (
@@ -366,9 +367,15 @@ def disponibilidades_publicas(cuidador_id):
         Disponibilidad.hora_desde
     ).all()
 
-    return jsonify({
-        "cuidador_id": perfil.id,
-        "disponibilidades": [
-            disponibilidad_a_dict(d) for d in registros
-        ]
-    }), 200
+    reservas = Solicitud.query.filter(
+        Solicitud.cuidador_id == perfil.id,
+        Solicitud.modalidad == "ALOJAMIENTO",
+        Solicitud.estado.in_(("ACEPTADA", "FINALIZADA")),
+    ).all()
+    datos = []
+    for d in registros:
+        item = disponibilidad_a_dict(d)
+        if d.modalidad == "ALOJAMIENTO":
+            item["tramos_cupo"] = tramos_cupo(d, perfil.capacidad_maxima, reservas)
+        datos.append(item)
+    return jsonify({"cuidador_id": perfil.id, "disponibilidades": datos}), 200
