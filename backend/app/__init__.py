@@ -60,6 +60,10 @@ def create_app(config_name=None):
     from .valoraciones import valoraciones_bp
     app.register_blueprint(valoraciones_bp)
 
+    # Panel administrativo independiente.\n    from .admin import admin_bp\n    app.register_blueprint(admin_bp)\n\n    # Panel administrativo independiente.
+    from .admin import admin_bp
+    app.register_blueprint(admin_bp)
+
     # Interfaz web desarrollada por Maru.
     from .ui_base import ui_bp
     app.register_blueprint(ui_bp)

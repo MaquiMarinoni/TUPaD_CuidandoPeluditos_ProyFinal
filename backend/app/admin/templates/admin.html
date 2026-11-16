@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administracion | Cuidando Peluditos</title>
+  <link rel="stylesheet" href="{{ url_for('admin.static', filename='admin.css') }}">
+  <script defer src="{{ url_for('admin.static', filename='admin.js') }}"></script>
+</head>
+<body>
+<header>
+  <div><strong>Cuidando Peluditos</strong><span> Panel administrativo</span></div>
+  <a href="/">Volver al sitio</a>
+</header>
+<main>
+  <h1>Panel de administracion</h1>
+  <p>Supervision general de la plataforma.</p>
+  <div id="mensaje" role="status" aria-live="polite"></div>
+  <section id="metricas" class="metricas" aria-label="Indicadores"></section>
+  <nav class="pestanas" aria-label="Secciones administrativas">
+    <button data-seccion="usuarios">Usuarios</button>
+    <button data-seccion="cuidadores">Cuidadores</button>
+    <button data-seccion="solicitudes">Solicitudes</button>
+    <button data-seccion="incidencias">Incidencias</button>
+  </nav>
+  <section class="panel">
+    <h2 id="titulo">Usuarios</h2>
+    <div class="filtros">
+      <input id="buscar" type="search" placeholder="Buscar usuario" aria-label="Buscar usuario">
+      <select id="estado" aria-label="Filtrar por estado" hidden></select>
+      <button id="filtrar">Buscar / filtrar</button>
+    </div>
+    <div class="tabla">
+      <table>
+        <thead id="encabezados"></thead>
+        <tbody id="filas"></tbody>
+      </table>
+    </div>
+    <div class="paginacion">
+      <button id="anterior">Anterior</button>
+      <span id="pagina"></span>
+      <button id="siguiente">Siguiente</button>
+    </div>
+  </section>
+</main>
+</body>
+</html>
