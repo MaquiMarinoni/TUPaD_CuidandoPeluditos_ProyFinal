@@ -21,7 +21,7 @@
 <body>
   <header class="cabecera">
     <div class="marca">
-      <strong>Cuidando Peluditos</strong>
+      <a href="{{ url_for('ui_base.demo') }}" aria-label="Cuidando Peluditos, inicio"><img class="marca-logo" src="{{ url_for('ui_base.demo_assets', nombre='img/brand/logo-cuidando-peluditos.png') }}" alt="Cuidando Peluditos" width="340" height="153"></a>
       <span>Panel de administración</span>
     </div>
 
@@ -30,6 +30,7 @@
 
   <main>
     <section class="presentacion">
+      <span class="eyebrow">GESTIÓN Y SEGUIMIENTO</span>
       <h1>Administración de la plataforma</h1>
       <p>
         Gestión de cuentas y supervisión de solicitudes,
@@ -99,7 +100,7 @@
         </button>
       </div>
 
-      <div class="tabla">
+      <div class="tabla" role="region" aria-label="Listado de cuentas, desplazable horizontalmente" tabindex="0">
         <table>
           <thead id="encabezados"></thead>
           <tbody id="filas"></tbody>
@@ -206,5 +207,6 @@
       </section>
     </section>
   </main>
+  <button id="volver-arriba" class="back-to-top" type="button" aria-label="Volver arriba" title="Volver arriba" hidden><span aria-hidden="true">↑</span><span class="back-to-top-label">Volver arriba</span></button>
 </body>
 </html>

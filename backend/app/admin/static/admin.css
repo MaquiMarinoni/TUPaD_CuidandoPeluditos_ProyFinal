@@ -8,18 +8,18 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
 
-  color: #30263c;
-  background: #f7f5fa;
+  color: #342840;
+  background: #fcfaf7;
 
-  --violeta: #68458b;
-  --violeta-oscuro: #493064;
+  --violeta: #9B63BF;
+  --violeta-oscuro: #603c80;
   --violeta-claro: #f0e9f7;
 
-  --fondo: #f7f5fa;
+  --fondo: #fcfaf7;
   --blanco: #ffffff;
-  --borde: #e6ddec;
-  --texto: #30263c;
-  --texto-secundario: #746b7c;
+  --borde: #e8e1eb;
+  --texto: #342840;
+  --texto-secundario: #6d6672;
 
   --verde: #23734b;
   --verde-claro: #e7f5ec;
@@ -58,8 +58,9 @@ body {
 
   padding: 1.3rem max(1.5rem, calc((100% - 1200px) / 2));
 
-  background: var(--violeta-oscuro);
-  color: var(--blanco);
+  background: var(--blanco);
+  color: var(--texto);
+  border-bottom: 1px solid var(--borde);
 }
 
 .marca {
@@ -85,10 +86,10 @@ body {
 
   padding: 0.6rem 1rem;
 
-  color: var(--blanco);
+  color: var(--violeta);
   text-decoration: none;
 
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid #bda5cf;
   border-radius: 8px;
 
   font-size: 0.9rem;
@@ -96,7 +97,8 @@ body {
 }
 
 .volver:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--violeta);
+  color: white;
 }
 
 /* =========================================================
@@ -106,7 +108,8 @@ body {
 main {
   width: min(1200px, 100%);
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2.5rem 1.5rem 4rem;
+  min-width: 0;
 }
 
 .presentacion {
@@ -124,7 +127,9 @@ h5 {
 
 h1 {
   margin: 0 0 0.4rem;
-  font-size: clamp(1.55rem, 3vw, 2rem);
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.035em;
+  font-weight: 750;
 }
 
 h2 {
@@ -193,7 +198,7 @@ h5 {
   background: var(--blanco);
   border: 1px solid var(--borde);
   border-radius: 14px;
-  box-shadow: var(--sombra);
+  box-shadow: none;
 }
 
 .metrica strong {
@@ -215,12 +220,14 @@ h5 {
 .pestanas {
   display: flex;
   gap: 0.6rem;
+  flex-wrap: wrap;
   margin: 0 0 1rem;
   padding-bottom: 0.3rem;
 }
 
 .pestanas button {
   min-width: 140px;
+  white-space: nowrap;
   padding: 0.85rem 1.3rem;
 
   background: var(--blanco);
@@ -252,7 +259,7 @@ h5 {
   background: var(--blanco);
   border: 1px solid var(--borde);
   border-radius: 14px;
-  box-shadow: var(--sombra);
+  box-shadow: none;
 }
 
 .panel-encabezado,
@@ -317,7 +324,7 @@ button:disabled:hover {
 button:focus-visible,
 input:focus-visible,
 a:focus-visible {
-  outline: 3px solid #b6a1d4;
+  outline: 3px solid #F25116;
   outline-offset: 3px;
 }
 
@@ -393,6 +400,7 @@ input[type="search"]::placeholder {
 
 table {
   width: 100%;
+  min-width: 960px;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.9rem;
@@ -416,7 +424,7 @@ td {
 }
 
 td {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 tbody tr:last-child td {
@@ -428,7 +436,8 @@ tbody tr:hover {
 }
 
 td:last-child {
-  min-width: 180px;
+  min-width: 230px;
+  white-space: nowrap;
 }
 
 td:last-child button {
@@ -445,7 +454,9 @@ td:last-child button {
 
   padding: 0.3rem 0.65rem;
 
-  border-radius: 20px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
   font-size: 0.8rem;
   font-weight: 700;
 }
@@ -530,7 +541,7 @@ td:last-child button {
   color: var(--texto);
   font-size: 0.92rem;
   font-weight: 600;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 /* =========================================================
@@ -704,3 +715,36 @@ td:last-child button {
     padding: 0.75rem 0.6rem;
   }
 }
+
+/* Identidad compartida con el sitio público y columnas legibles. */
+.marca { flex-direction: row; align-items: center; gap: 24px; min-width: 0; }
+.marca-logo { display: block; width: 136px; height: auto; }
+.marca span { color: var(--texto-secundario); opacity: 1; border-left: 1px solid var(--borde); padding-left: 24px; }
+.eyebrow { display: block; color: var(--violeta); font-size: .72rem; font-weight: 750; letter-spacing: .16em; margin-bottom: 16px; }
+.presentacion p { max-width: 660px; line-height: 1.7; }
+.panel, .metrica { border-radius: 18px; }
+.panel { min-width: 0; }
+.tabla:focus-visible { outline: 3px solid #F25116; outline-offset: 3px; }
+table th:first-child, table td:first-child:not([colspan]) { width: 64px; min-width: 64px; white-space: nowrap; }
+table th:nth-child(2), table td:nth-child(2) { min-width: 175px; }
+table th:nth-child(3), table td:nth-child(3) { min-width: 220px; max-width: 320px; overflow-wrap: anywhere; }
+table th:nth-child(4), table td:nth-child(4) { min-width: 145px; }
+table td:has(.estado) { min-width: 96px; white-space: nowrap; }
+table td:last-child button { padding: .5rem .75rem; min-height: 40px; white-space: nowrap; }
+tbody tr:hover { background: #faf7fc; }
+#mensaje:empty { display: none; }
+.metrica { border-top: 3px solid #e6d5f1; }
+@media (max-width: 600px) {
+  .marca { gap: 14px; flex-wrap: wrap; }
+  .marca-logo { width: 110px; }
+  .marca span { padding-left: 14px; font-size: .8rem; }
+  .cabecera { align-items: flex-start; }
+  .volver { min-height: 44px; }
+  .metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tabla { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+.back-to-top { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 30; gap: 8px; min-width: 48px; min-height: 48px; box-shadow: 0 4px 16px #34284026; }
+.back-to-top > span[aria-hidden] { font-size: 1.4rem; line-height: 1; }
+@media (max-width: 767px) { .back-to-top { right: 16px; padding: 10px; } .back-to-top-label { display: none; } }

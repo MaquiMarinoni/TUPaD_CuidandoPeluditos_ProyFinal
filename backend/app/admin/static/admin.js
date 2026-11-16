@@ -833,3 +833,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     mensaje(error.message, true);
   }
 });
+
+// El atajo conserva la pestaña, la página y los filtros administrativos.
+function actualizarVolverArriba() {
+  $("volver-arriba").hidden = window.scrollY < 400;
+}
+window.addEventListener("scroll", actualizarVolverArriba, {passive: true});
+window.addEventListener("pageshow", actualizarVolverArriba);
+$("volver-arriba").addEventListener("click", () => {
+  document.querySelector(".marca a").focus({preventScroll: true});
+  const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({top: 0, behavior: reducirMovimiento ? "instant" : "smooth"});
+});
+actualizarVolverArriba();
