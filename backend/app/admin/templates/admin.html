@@ -1,47 +1,210 @@
+
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Administracion | Cuidando Peluditos</title>
-  <link rel="stylesheet" href="{{ url_for('admin.static', filename='admin.css') }}">
-  <script defer src="{{ url_for('admin.static', filename='admin.js') }}"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Administración | Cuidando Peluditos</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('admin.static', filename='admin.css') }}"
+  >
+
+  <script
+    defer
+    src="{{ url_for('admin.static', filename='admin.js') }}"
+  ></script>
 </head>
+
 <body>
-<header>
-  <div><strong>Cuidando Peluditos</strong><span> Panel administrativo</span></div>
-  <a href="/">Volver al sitio</a>
-</header>
-<main>
-  <h1>Panel de administracion</h1>
-  <p>Supervision general de la plataforma.</p>
-  <div id="mensaje" role="status" aria-live="polite"></div>
-  <section id="metricas" class="metricas" aria-label="Indicadores"></section>
-  <nav class="pestanas" aria-label="Secciones administrativas">
-    <button data-seccion="usuarios">Usuarios</button>
-    <button data-seccion="cuidadores">Cuidadores</button>
-    <button data-seccion="solicitudes">Solicitudes</button>
-    <button data-seccion="incidencias">Incidencias</button>
-  </nav>
-  <section class="panel">
-    <h2 id="titulo">Usuarios</h2>
-    <div class="filtros">
-      <input id="buscar" type="search" placeholder="Buscar usuario" aria-label="Buscar usuario">
-      <select id="estado" aria-label="Filtrar por estado" hidden></select>
-      <button id="filtrar">Buscar / filtrar</button>
+  <header class="cabecera">
+    <div class="marca">
+      <strong>Cuidando Peluditos</strong>
+      <span>Panel de administración</span>
     </div>
-    <div class="tabla">
-      <table>
-        <thead id="encabezados"></thead>
-        <tbody id="filas"></tbody>
-      </table>
-    </div>
-    <div class="paginacion">
-      <button id="anterior">Anterior</button>
-      <span id="pagina"></span>
-      <button id="siguiente">Siguiente</button>
-    </div>
-  </section>
-</main>
+
+    <a href="/" class="volver">Volver al sitio</a>
+  </header>
+
+  <main>
+    <section class="presentacion">
+      <h1>Administración de la plataforma</h1>
+      <p>
+        Gestión de cuentas y supervisión de solicitudes,
+        servicios e incidencias.
+      </p>
+    </section>
+
+    <div
+      id="mensaje"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <!-- Indicadores generales -->
+    <section
+      id="metricas"
+      class="metricas"
+      aria-label="Indicadores generales"
+    ></section>
+
+    <!-- Navegación principal -->
+    <nav
+      class="pestanas"
+      aria-label="Secciones administrativas"
+    >
+      <button
+        type="button"
+        data-seccion="usuarios"
+        aria-current="page"
+      >
+        Dueños
+      </button>
+
+      <button
+        type="button"
+        data-seccion="cuidadores"
+      >
+        Cuidadores
+      </button>
+    </nav>
+
+    <!-- Listado principal -->
+    <section
+      id="panel-listado"
+      class="panel"
+      aria-labelledby="titulo"
+    >
+      <div class="panel-encabezado">
+        <div>
+          <h2 id="titulo">Dueños registrados</h2>
+          <p id="descripcion-seccion">
+            Consultá las cuentas registradas y su estado.
+          </p>
+        </div>
+      </div>
+
+      <div class="filtros">
+        <input
+          id="buscar"
+          type="search"
+          placeholder="Buscar por nombre o correo"
+          aria-label="Buscar usuario"
+        >
+
+        <button id="filtrar" type="button">
+          Buscar
+        </button>
+      </div>
+
+      <div class="tabla">
+        <table>
+          <thead id="encabezados"></thead>
+          <tbody id="filas"></tbody>
+        </table>
+      </div>
+
+      <div class="paginacion">
+        <button id="anterior" type="button">
+          Anterior
+        </button>
+
+        <span id="pagina"></span>
+
+        <button id="siguiente" type="button">
+          Siguiente
+        </button>
+      </div>
+    </section>
+
+    <!-- Detalle de dueño o cuidador -->
+    <section
+      id="panel-detalle"
+      class="panel detalle"
+      aria-labelledby="titulo-detalle"
+      hidden
+    >
+      <div class="detalle-encabezado">
+        <div>
+          <button
+            id="volver-listado"
+            type="button"
+            class="boton-secundario"
+          >
+            Volver al listado
+          </button>
+
+          <h2 id="titulo-detalle">Detalle</h2>
+          <p id="subtitulo-detalle"></p>
+        </div>
+
+        <div id="acciones-detalle"></div>
+      </div>
+
+      <!-- Información de la cuenta -->
+      <section class="detalle-bloque">
+        <h3>Información de la cuenta</h3>
+
+        <div
+          id="datos-cuenta"
+          class="datos-grid"
+        ></div>
+      </section>
+
+      <!-- Información específica del perfil -->
+      <section
+        id="bloque-perfil"
+        class="detalle-bloque"
+        hidden
+      >
+        <h3>Perfil del cuidador</h3>
+
+        <div
+          id="datos-perfil"
+          class="datos-grid"
+        ></div>
+      </section>
+
+      <!-- Mascotas del dueño -->
+      <section
+        id="bloque-mascotas"
+        class="detalle-bloque"
+        hidden
+      >
+        <h3>Mascotas registradas</h3>
+
+        <div id="lista-mascotas"></div>
+      </section>
+
+      <!-- Historial de solicitudes o servicios -->
+      <section class="detalle-bloque">
+        <h3 id="titulo-historial">
+          Historial de solicitudes
+        </h3>
+
+        <div id="lista-historial"></div>
+
+        <div class="paginacion">
+          <button
+            id="historial-anterior"
+            type="button"
+          >
+            Anterior
+          </button>
+
+          <span id="historial-pagina"></span>
+
+          <button
+            id="historial-siguiente"
+            type="button"
+          >
+            Siguiente
+          </button>
+        </div>
+      </section>
+    </section>
+  </main>
 </body>
 </html>
