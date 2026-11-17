@@ -1,0 +1,20 @@
+{
+  "fecha_revision": "2026-11-17",
+  "tipo": "consulta publica de solo lectura",
+  "base_url": "https://cuidando-peluditos.onrender.com",
+  "listado": "/api/cuidadores",
+  "disponibilidades": "/api/cuidadores/{id}/disponibilidades",
+  "perfiles_consultados": 16,
+  "franjas_visita_menores_de_60_minutos_encontradas": [],
+  "limitaciones": "No se consultaron solicitudes privadas ni cuentas inactivas. No permite identificar el registro observado anteriormente.",
+  "reproduccion_local": {
+    "funcion": "backend.app.disponibilidades.routes.validar_datos",
+    "modalidad": "VISITA",
+    "fecha": "dia siguiente a la ejecucion",
+    "hora_desde": "15:00",
+    "hora_hasta": "15:05",
+    "validacion_aceptada": true,
+    "error": null,
+    "persistencia": false
+  }
+}

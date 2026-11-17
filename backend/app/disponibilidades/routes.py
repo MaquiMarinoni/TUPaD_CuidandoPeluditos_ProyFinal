@@ -157,6 +157,11 @@ def validar_datos(datos):
         if hora_hasta <= hora_desde:
             return None, "La hora final debe ser posterior al inicio."
 
+        duracion = (datetime.combine(fecha_desde, hora_hasta)
+                    - datetime.combine(fecha_desde, hora_desde))
+        if duracion.total_seconds() < 3600:
+            return None, "La franja de visitas debe cubrir al menos 60 minutos."
+
     return {
         "modalidad": modalidad,
         "fecha_desde": fecha_desde,

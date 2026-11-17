@@ -1,5 +1,6 @@
 
 from decimal import Decimal, InvalidOperation
+from datetime import date, datetime
 
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
@@ -388,6 +389,13 @@ def disponibilidades_publicas(cuidador_id):
     ).all()
     datos = []
     for d in registros:
+        if d.modalidad == "VISITA":
+            if not d.hora_desde or not d.hora_hasta:
+                continue
+            duracion = (datetime.combine(d.fecha_desde, d.hora_hasta)
+                        - datetime.combine(d.fecha_desde, d.hora_desde))
+            if d.fecha_hasta < date.today() or duracion.total_seconds() < 3600:
+                continue
         item = disponibilidad_a_dict(d)
         if d.modalidad == "ALOJAMIENTO":
             item["tramos_cupo"] = tramos_cupo(d, perfil.capacidad_maxima, reservas)
