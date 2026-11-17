@@ -88,3 +88,7 @@ Luego se cambió únicamente la hora final a 16:00. La publicación se aceptó y
 - [Franja de 60 minutos publicada](evidencias/visitas-cortas-2026-11-17/02-franja-sesenta-minutos-publicada.png).
 
 Estas capturas verifican la publicación en el entorno local; la exclusión pública de franjas antiguas se cubrió con pruebas automatizadas. La comprobación de la corrección después del despliegue en Render continúa pendiente.
+
+### Identificación posterior en el historial de producción
+
+Durante el recorrido final se identificó la visita #8, FINALIZADA, del 13/11/2026, de 11:55 a 12:00, tres mascotas y monto histórico de $10.000. Es anterior a la regla del 15/11 y se conserva sin recalcular. La nueva #120002, del 29/11 de 15:00 a 16:00 para dos mascotas, confirmó $16.000. La publicación de una franja de cinco minutos fue rechazada. Evidencias en [validación de producción](validacion-produccion-2026-11-17.md). No se puede asegurar que la #8 sea el mismo registro del reporte inicial.
