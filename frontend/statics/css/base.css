@@ -26,3 +26,25 @@
 .back-to-top{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:48px;min-height:48px;box-shadow:0 4px 16px #34284026}
 .back-to-top>span[aria-hidden]{font-size:1.4rem;line-height:1}
 @media(max-width:767px){.back-to-top{right:16px;padding:10px}.back-to-top-label{display:none}}
+
+
+/* Control para mostrar u ocultar contrase?as. */
+.password-field{position:relative;display:block}
+.password-field .form-control{padding-right:52px}
+.password-toggle{
+  position:absolute;
+  right:6px;
+  top:calc(50% + 3.5px);
+  transform:translateY(-50%);
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--pet-primary);
+  cursor:pointer;
+}
+.password-toggle:hover{background:#f1eaf7}
+.password-toggle:focus-visible{outline:3px solid var(--pet-orange)}

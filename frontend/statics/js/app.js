@@ -534,3 +534,18 @@ el("volver-arriba").addEventListener("click", () => {
   window.scrollTo({top:0, behavior:reducirMovimiento ? "instant" : "smooth"});
 });
 actualizarVolverArriba();
+
+
+// Permite visualizar temporalmente las contrase?as de acceso y registro.
+document.querySelectorAll(".password-toggle").forEach(boton => {
+  boton.addEventListener("click", () => {
+    const campo = boton.closest(".password-field").querySelector("input");
+    const mostrar = campo.type === "password";
+
+    campo.type = mostrar ? "text" : "password";
+    boton.setAttribute("aria-pressed", String(mostrar));
+    boton.setAttribute("aria-label", mostrar ? "Ocultar contrase?a" : "Mostrar contrase?a");
+    boton.title = mostrar ? "Ocultar contrase?a" : "Mostrar contrase?a";
+    boton.querySelector("span").innerHTML = mostrar ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.6 5.1A10.9 10.9 0 0 1 12 5c6.5 0 10 7 10 7a14.7 14.7 0 0 1-3.1 3.8"/><path d="M6.5 6.5C3.6 8.5 2 12 2 12s3.5 7 10 7c1.7 0 3.2-.5 4.5-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M3 3l18 18"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/></svg>';
+  });
+});
