@@ -30,6 +30,7 @@ CAMPOS_PERMITIDOS = {
     "condiciones_convivencia",
     "tarifa_diaria",
     "tarifa_visita",
+    "direccion_alojamiento",
 }
 
 
@@ -41,10 +42,10 @@ def es_cuidador():
     return current_user.activo and current_user.es_cuidador()
 
 
-def perfil_a_dict(perfil):
+def perfil_a_dict(perfil, privado=False):
     usuario = perfil.usuario
 
-    return {
+    resultado = {
         "id": perfil.id,
         "usuario_id": usuario.id,
         "nombre": usuario.nombre,
@@ -63,6 +64,10 @@ def perfil_a_dict(perfil):
             else None
         ),
     }
+
+    if privado:
+        resultado["direccion_alojamiento"] = usuario.direccion
+    return resultado
 
 
 def validar_precio(valor, campo):
@@ -100,6 +105,11 @@ def validar_datos(datos, creacion=False):
         return None, "La tarifa diaria es obligatoria."
 
     resultado = {}
+    if "direccion_alojamiento" in datos:
+        direccion = datos["direccion_alojamiento"]
+        if direccion is not None and (not isinstance(direccion, str) or len(direccion.strip()) > 120):
+            return None, "La dirección de alojamiento debe tener hasta 120 caracteres."
+        resultado["direccion_alojamiento"] = direccion.strip() or None if isinstance(direccion, str) else None
 
     for campo in ("descripcion", "condiciones_convivencia"):
         if campo in datos:
@@ -198,7 +208,7 @@ def obtener_mi_perfil():
     if perfil is None:
         return responder_error("Perfil no encontrado.", 404)
 
-    return jsonify({"cuidador": perfil_a_dict(perfil)}), 200
+    return jsonify({"cuidador": perfil_a_dict(perfil, privado=True)}), 200
 
 
 @cuidadores_bp.post("/mi-perfil")
@@ -220,6 +230,8 @@ def crear_perfil():
     if mensaje:
         return responder_error(mensaje)
 
+    if "direccion_alojamiento" in datos_validos:
+        current_user.direccion = datos_validos.pop("direccion_alojamiento")
     perfil = PerfilCuidador(
         usuario_id=current_user.id,
         **datos_validos
@@ -234,7 +246,7 @@ def crear_perfil():
 
     return jsonify({
         "mensaje": "Perfil creado correctamente.",
-        "cuidador": perfil_a_dict(perfil)
+        "cuidador": perfil_a_dict(perfil, privado=True)
     }), 201
 
 @cuidadores_bp.put("/mi-perfil")
@@ -320,6 +332,8 @@ def editar_perfil():
                         409
                     )
 
+    if "direccion_alojamiento" in datos_validos:
+        current_user.direccion = datos_validos.pop("direccion_alojamiento")
     for campo, valor in datos_validos.items():
         setattr(perfil, campo, valor)
 
@@ -327,7 +341,7 @@ def editar_perfil():
 
     return jsonify({
         "mensaje": "Perfil actualizado correctamente.",
-        "cuidador": perfil_a_dict(perfil)
+        "cuidador": perfil_a_dict(perfil, privado=True)
     }), 200
 
 

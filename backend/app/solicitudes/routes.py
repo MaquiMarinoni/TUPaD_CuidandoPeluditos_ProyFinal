@@ -357,7 +357,22 @@ def solicitud_a_dict(solicitud):
         )
     )
 
+    # Contactos actuales de coordinación, solo para los participantes.
+    contactos = None
+    participante = (
+        current_user.is_authenticated and current_user.activo
+        and (current_user.id == solicitud.dueno_id
+             or (current_user.es_cuidador() and solicitud.cuidador_perfil.usuario_id == current_user.id))
+    )
+    if participante and solicitud.estado in ("ACEPTADA", "FINALIZADA"):
+        def contacto(usuario):
+            return {"nombre": f"{usuario.nombre} {usuario.apellido}",
+                    "telefono": usuario.telefono, "email": usuario.email}
+        contactos = {"dueno": contacto(solicitud.dueno),
+                     "cuidador": contacto(solicitud.cuidador_perfil.usuario)}
+
     return {
+        "contactos": contactos,
         "id": solicitud.id,
         "dueno_id": solicitud.dueno_id,
         "cuidador_id": solicitud.cuidador_id,
@@ -936,6 +951,9 @@ def cambiar_estado(solicitud_id, accion):
                     400,
                 )
 
+            if solicitud.modalidad == "ALOJAMIENTO" and not solicitud.direccion_servicio:
+                # Se congela al acordar el servicio; no cambia al editar el perfil.
+                solicitud.direccion_servicio = perfil.usuario.direccion
             nuevo = "ACEPTADA"
 
         elif accion == "rechazar":

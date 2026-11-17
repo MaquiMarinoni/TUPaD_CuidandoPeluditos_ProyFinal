@@ -266,7 +266,7 @@ async function cargarAgenda() {
   el("aviso-perfil").textContent = tienePerfil ? "Publicá fechas para que puedan solicitar tus servicios." : "Primero guardá tu perfil para habilitar la agenda.";
   if (!perfil) { el("mis-disponibilidades").innerHTML = vacio("Armá tu perfil", "Después vas a poder publicar tu disponibilidad."); return; }
   const f = el("form-perfil");
-  ["descripcion", "condiciones_convivencia", "capacidad_maxima", "tarifa_diaria", "tarifa_visita"].forEach(k => { f.elements[k].value = perfil[k] ?? ""; });
+  ["descripcion", "condiciones_convivencia", "capacidad_maxima", "tarifa_diaria", "tarifa_visita", "direccion_alojamiento"].forEach(k => { f.elements[k].value = perfil[k] ?? ""; });
   ["admite_perros", "admite_gatos"].forEach(k => { f.elements[k].checked = perfil[k]; });
   const r = await api("/api/disponibilidades");
   if (version !== versionSesion) return;
@@ -286,12 +286,22 @@ function accionesSolicitud(s) {
   return resultado;
 }
 
+function contactosSolicitud(s) {
+  if (!s.contactos) return '<p class="field-note">Los contactos para coordinar se habilitan al aceptar el servicio.</p>';
+  const contraparte = usuario?.rol === "DUENO" ? s.contactos.cuidador : s.contactos.dueno;
+  const rol = usuario?.rol === "DUENO" ? "Cuidador" : "Dueño";
+  const direccion = s.modalidad === "ALOJAMIENTO"
+    ? `<dt>Dirección de alojamiento acordada</dt><dd>${html(s.direccion_servicio || "Coordiná la entrega con el cuidador por teléfono o email.")}</dd>`
+    : `<dt>Dirección de la visita</dt><dd>${html(s.direccion_servicio || "No informada")}</dd>`;
+  return `<details class="contactos-servicio"><summary>Contactos para coordinar</summary><dl><dt>${rol}</dt><dd>${html(contraparte.nombre)}</dd><dt>Teléfono</dt><dd>${html(contraparte.telefono)}</dd><dt>Email</dt><dd>${html(contraparte.email)}</dd>${direccion}</dl><p class="field-note">Datos de contacto actuales. Este servicio no incluye chat ni envío automático de mensajes.</p></details>`;
+}
+
 function mostrarSolicitudes() {
   const filtro = el("filtro-estado").value;
   const lista = solicitudes.filter(s => !filtro || s.estado === filtro);
   el("lista-solicitudes").innerHTML = lista.length ? lista.map(s => {
     const c = cuidadores.find(c => c.id === s.cuidador_id);
-    return `<article class="solicitud-card"><div class="d-flex flex-wrap gap-2 justify-content-between"><strong>${s.modalidad === "VISITA" ? "Visita a domicilio" : "Alojamiento"} · #${s.id}</strong><span class="status status-${html(s.estado.toLowerCase())}">${html(estado(s.estado))}</span></div>${c ? `<p>Cuidador: ${html(c.nombre)} ${html(c.apellido)}</p>` : ""}<p>${fecha(s.fecha_desde)}${s.modalidad === "VISITA" ? ` · ${html(s.hora_desde)}–${html(s.hora_hasta)}` : ` al ${fecha(s.fecha_hasta)} · ${s.noches} noche(s)`}</p><p>${html((s.mascotas || []).map(m => m.nombre).join(", "))} · ${s.total_mascotas} mascota(s)</p><strong>Total: ${dinero(s.monto_total)}</strong><div class="entry-actions">${accionesSolicitud(s)}</div><details><summary>Ver cuidados e historial</summary><dl><dt>Contacto de emergencia</dt><dd>${html(s.contacto_emergencia || "No informado")}</dd><dt>Veterinario</dt><dd>${html(s.veterinario_emergencia || "No informado")}</dd><dt>Atención de urgencia</dt><dd>${s.autorizacion_urgencia ? `Autorizada hasta ${dinero(s.limite_gastos_urgencia)}` : "No autorizada"}</dd>${s.direccion_servicio ? `<dt>Dirección del servicio</dt><dd>${html(s.direccion_servicio)}</dd>` : ""}</dl>${(s.mascotas || []).map(m => `<p><strong>${html(m.nombre)}:</strong> ${html(m.cuidados_especiales || "Sin cuidados especiales registrados.")}</p>`).join("")}<h3 class="h6">Historial</h3><ol>${(s.historial || []).map(h => `<li>${html(estado(h.estado_nuevo))} · ${html(new Date(h.fecha_cambio).toLocaleString("es-AR"))}${h.motivo ? ` · ${html(h.motivo)}` : ""}</li>`).join("")}</ol></details></article>`;
+    return `<article class="solicitud-card"><div class="d-flex flex-wrap gap-2 justify-content-between"><strong>${s.modalidad === "VISITA" ? "Visita a domicilio" : "Alojamiento"} · #${s.id}</strong><span class="status status-${html(s.estado.toLowerCase())}">${html(estado(s.estado))}</span></div>${c ? `<p>Cuidador: ${html(c.nombre)} ${html(c.apellido)}</p>` : ""}<p>${fecha(s.fecha_desde)}${s.modalidad === "VISITA" ? ` · ${html(s.hora_desde)}–${html(s.hora_hasta)}` : ` al ${fecha(s.fecha_hasta)} · ${s.noches} noche(s)`}</p><p>${html((s.mascotas || []).map(m => m.nombre).join(", "))} · ${s.total_mascotas} mascota(s)</p><strong>Total: ${dinero(s.monto_total)}</strong><div class="entry-actions">${accionesSolicitud(s)}</div>${contactosSolicitud(s)}<details><summary>Ver cuidados e historial</summary><dl><dt>Contacto de emergencia</dt><dd>${html(s.contacto_emergencia || "No informado")}</dd><dt>Veterinario</dt><dd>${html(s.veterinario_emergencia || "No informado")}</dd><dt>Atención de urgencia</dt><dd>${s.autorizacion_urgencia ? `Autorizada hasta ${dinero(s.limite_gastos_urgencia)}` : "No autorizada"}</dd>${s.direccion_servicio ? `<dt>Dirección del servicio</dt><dd>${html(s.direccion_servicio)}</dd>` : ""}</dl>${(s.mascotas || []).map(m => `<p><strong>${html(m.nombre)}:</strong> ${html(m.cuidados_especiales || "Sin cuidados especiales registrados.")}</p>`).join("")}<h3 class="h6">Historial</h3><ol>${(s.historial || []).map(h => `<li>${html(estado(h.estado_nuevo))} · ${html(new Date(h.fecha_cambio).toLocaleString("es-AR"))}${h.motivo ? ` · ${html(h.motivo)}` : ""}</li>`).join("")}</ol></details></article>`;
   }).join("") : vacio(filtro ? "No hay solicitudes con ese estado" : "Todavía no hay solicitudes", usuario?.rol === "DUENO" ? "Elegí un cuidador para organizar tu primer servicio." : "Tus solicitudes recibidas van a aparecer acá.", usuario?.rol === "DUENO" ? "#cuidadores" : "", "Buscar cuidadores");
   actualizarP1Solicitudes();
 }
