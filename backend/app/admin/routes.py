@@ -6,6 +6,8 @@ from functools import wraps
 from flask import Blueprint, jsonify, render_template, request
 from flask_login import current_user, login_required
 from sqlalchemy import func, or_, select
+from sqlalchemy.exc import IntegrityError, OperationalError
+from backend.app.models import AuditoriaCuenta
 
 from backend.app.extensions import db
 from backend.app.models import (
@@ -158,34 +160,85 @@ def estado_usuario(usuario_id):
 
     if (
         not isinstance(datos, dict)
-        or set(datos) != {"activo"}
+        or set(datos) != {"activo", "motivo"}
         or type(datos["activo"]) is not bool
     ):
         return jsonify({
-            "error": "Se requiere el campo booleano activo."
+            "error": "Se requieren activo (booleano) y motivo."
         }), 400
 
-    usuario = db.session.get(Usuario, usuario_id)
+    motivo = datos.get("motivo")
+    if not isinstance(motivo, str) or not 1 <= len(motivo.strip()) <= 1000:
+        return jsonify({"error": "Indica un motivo de entre 1 y 1000 caracteres."}), 400
+
+    try:
+        usuario = db.session.execute(
+            select(Usuario).where(Usuario.id == usuario_id).with_for_update()
+        ).scalar_one_or_none()
+    except OperationalError:
+        db.session.rollback()
+        return jsonify({"error": "No se pudo bloquear la cuenta. Volvé a intentar."}), 409
 
     if usuario is None:
+        db.session.rollback()
         return jsonify({"error": "Usuario no encontrado."}), 404
 
     if usuario.id == current_user.id or usuario.rol.nombre == "ADMIN":
+        db.session.rollback()
         return jsonify({
             "error": "No se permite modificar cuentas administradoras."
         }), 403
 
+    if usuario.activo == datos["activo"]:
+        db.session.rollback()
+        return jsonify({"error": "La cuenta ya tiene ese estado. Actualizá el listado."}), 409
+
+    registro = AuditoriaCuenta(
+        usuario_id=usuario.id,
+        administrador_id=current_user.id,
+        activo_anterior=usuario.activo,
+        activo_nuevo=datos["activo"],
+        motivo=motivo.strip(),
+    )
     usuario.activo = datos["activo"]
-    db.session.commit()
+    db.session.add(registro)
+    try:
+        db.session.commit()
+    except (IntegrityError, OperationalError):
+        db.session.rollback()
+        return jsonify({"error": "No se guardó el cambio de estado. Volvé a intentar."}), 409
 
     return jsonify({
-        "mensaje": "Estado actualizado.",
+        "mensaje": "Estado actualizado y registrado en el historial.",
         "id": usuario.id,
         "activo": usuario.activo
     })
 
 
 # ---------------------------------------------------------
+# Historial de cambios administrativos de una cuenta
+# ---------------------------------------------------------
+
+@admin_bp.get("/api/usuarios/<int:usuario_id>/auditoria")
+@solo_admin
+def auditoria_cuenta(usuario_id):
+    if db.session.get(Usuario, usuario_id) is None:
+        return jsonify({"error": "Usuario no encontrado."}), 404
+    consulta = select(AuditoriaCuenta).where(
+        AuditoriaCuenta.usuario_id == usuario_id
+    ).order_by(AuditoriaCuenta.id.desc())
+    return respuesta_paginada(consulta, lambda r: {
+        "id": r.id,
+        "usuario_id": r.usuario_id,
+        "administrador_id": r.administrador_id,
+        "administrador": f"{r.administrador.nombre} {r.administrador.apellido}",
+        "activo_anterior": r.activo_anterior,
+        "activo_nuevo": r.activo_nuevo,
+        "motivo": r.motivo,
+        "fecha_cambio": r.fecha_cambio.isoformat() + "Z",
+    })
+
+
 # Listado general de cuidadores
 # ---------------------------------------------------------
 

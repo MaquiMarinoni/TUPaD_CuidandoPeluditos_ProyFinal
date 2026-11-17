@@ -158,9 +158,8 @@ async function cargarResumen() {
 async function cambiarEstado(usuarioId, email, activo) {
   const accion = activo ? "desactivar" : "activar";
 
-  if (!confirm(`¿Confirmar ${accion} la cuenta ${email}?`)) {
-    return;
-  }
+  const motivo = await pedirMotivoCuenta(accion, email);
+  if (motivo === null) return;
 
   try {
     await api(
@@ -172,7 +171,8 @@ async function cambiarEstado(usuarioId, email, activo) {
           "X-CSRFToken": csrf
         },
         body: JSON.stringify({
-          activo: !activo
+          activo: !activo,
+          motivo
         })
       }
     );
@@ -299,6 +299,9 @@ async function cargarListado() {
       fila.appendChild(tdEstado);
 
       agregarAcciones(fila, item);
+      [...fila.cells].forEach((celda, indice) => {
+        celda.dataset.label = columnas[seccion][indice];
+      });
       $("filas").appendChild(fila);
     }
 
@@ -714,6 +717,7 @@ async function abrirDetalle(tipo, id, reiniciarPagina = true) {
         : "Detalle del cuidador registrado";
 
     mostrarCuenta(datos);
+    await cargarAuditoriaCuenta(tipo === "dueno" ? datos.id : datos.usuario_id);
 
     $("bloque-perfil").hidden =
       tipo !== "cuidador";
@@ -846,3 +850,57 @@ $("volver-arriba").addEventListener("click", () => {
   window.scrollTo({top: 0, behavior: reducirMovimiento ? "instant" : "smooth"});
 });
 actualizarVolverArriba();
+
+function pedirMotivoCuenta(accion, email) {
+  const dialogo = $("cambio-cuenta");
+  if (dialogo.open) return Promise.resolve(null);
+  const origen = document.activeElement;
+  $("form-cambio-cuenta").reset();
+  $("motivo-cuenta").setCustomValidity("");
+  $("cambio-cuenta-texto").textContent = `Vas a ${accion} la cuenta ${email}. El motivo y tu identidad quedarán registrados.`;
+  dialogo.returnValue = "";
+  return new Promise(resolve => {
+    dialogo.addEventListener("close", () => {
+      origen?.focus({preventScroll: true});
+      resolve(dialogo.returnValue === "confirmar" ? $("motivo-cuenta").value.trim() : null);
+    }, {once: true});
+    dialogo.showModal();
+    $("motivo-cuenta").focus();
+  });
+}
+$("form-cambio-cuenta").addEventListener("submit", event => {
+  event.preventDefault();
+  const campo = $("motivo-cuenta");
+  campo.setCustomValidity(campo.value.trim() ? "" : "Indicá el motivo del cambio.");
+  if (campo.reportValidity()) $("cambio-cuenta").close("confirmar");
+});
+$("motivo-cuenta").addEventListener("input", () => $("motivo-cuenta").setCustomValidity(""));
+$("cancelar-cambio-cuenta").addEventListener("click", () => $("cambio-cuenta").close("cancelar"));
+
+async function cargarAuditoriaCuenta(usuarioId, pagina = 1) {
+  const contenedor = $("auditoria-cuenta");
+  contenedor.textContent = "Consultando cambios de estado…";
+  const datos = await api(`/admin/api/usuarios/${usuarioId}/auditoria?pagina=${pagina}`);
+  contenedor.replaceChildren();
+  if (!datos.items.length) {
+    contenedor.appendChild(crearElemento("p", "No hay cambios registrados desde la incorporación de este historial."));
+    return;
+  }
+  for (const cambio of datos.items) {
+    const tarjeta = crearElemento("article", "", "tarjeta");
+    tarjeta.appendChild(crearElemento("h4", `${cambio.activo_anterior ? "Activa" : "Inactiva"} → ${cambio.activo_nuevo ? "Activa" : "Inactiva"}`));
+    tarjeta.appendChild(crearElemento("p", cambio.motivo));
+    const fechaLocal = new Date(cambio.fecha_cambio).toLocaleString("es-AR", {timeZone: "America/Argentina/Buenos_Aires"});
+    tarjeta.appendChild(crearElemento("p", `${cambio.administrador} · ID ${cambio.administrador_id} · ${fechaLocal} (Argentina)`));
+    contenedor.appendChild(tarjeta);
+  }
+  if (datos.paginas > 1) {
+    const controles = crearElemento("div", "", "paginacion");
+    const anterior = boton("Anterior", () => cargarAuditoriaCuenta(usuarioId, pagina - 1).catch(e => mensaje(e.message, true)));
+    anterior.disabled = pagina <= 1;
+    const siguiente = boton("Siguiente", () => cargarAuditoriaCuenta(usuarioId, pagina + 1).catch(e => mensaje(e.message, true)));
+    siguiente.disabled = pagina >= datos.paginas;
+    controles.append(anterior, crearElemento("span", `Página ${pagina} de ${datos.paginas}`), siguiente);
+    contenedor.appendChild(controles);
+  }
+}

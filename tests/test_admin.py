@@ -119,7 +119,7 @@ def test_dueno_y_cuidador_no_pueden_acceder(entorno):
 
         assert c.patch(
             f"/admin/api/usuarios/{ids['dueno']}/estado",
-            json={"activo": False},
+            json={"activo": False, "motivo": "Prueba administrativa"},
         ).status_code == 403
 
 
@@ -154,14 +154,14 @@ def test_admin_desactiva_y_reactiva(entorno):
 
     assert c.patch(
         ruta,
-        json={"activo": False},
+        json={"activo": False, "motivo": "Prueba administrativa"},
     ).status_code == 200
 
     assert cliente_inactivo(app).status_code == 401
 
     assert c.patch(
         ruta,
-        json={"activo": True},
+        json={"activo": True, "motivo": "Reactivación de prueba"},
     ).status_code == 200
 
 
@@ -173,7 +173,7 @@ def test_no_desactivar_administrador(entorno):
 
     assert c.patch(
         ruta,
-        json={"activo": False},
+        json={"activo": False, "motivo": "Prueba administrativa"},
     ).status_code == 403
 
 
@@ -190,7 +190,7 @@ def test_validaciones(entorno):
 
     assert c.patch(
         "/admin/api/usuarios/99999/estado",
-        json={"activo": False},
+        json={"activo": False, "motivo": "Prueba administrativa"},
     ).status_code == 404
 
     assert c.get(

@@ -154,6 +154,11 @@
         ></div>
       </section>
 
+      <section class="detalle-bloque" aria-labelledby="titulo-auditoria-cuenta">
+        <h3 id="titulo-auditoria-cuenta">Cambios de estado de la cuenta</h3>
+        <div id="auditoria-cuenta"></div>
+      </section>
+
       <!-- Información específica del perfil -->
       <section
         id="bloque-perfil"
@@ -208,5 +213,14 @@
     </section>
   </main>
   <button id="volver-arriba" class="back-to-top" type="button" aria-label="Volver arriba" title="Volver arriba" hidden><span aria-hidden="true">↑</span><span class="back-to-top-label">Volver arriba</span></button>
+  <dialog id="cambio-cuenta" aria-labelledby="cambio-cuenta-titulo">
+    <form id="form-cambio-cuenta">
+      <h2 id="cambio-cuenta-titulo">Cambiar estado de la cuenta</h2>
+      <p id="cambio-cuenta-texto"></p>
+      <label for="motivo-cuenta">Motivo del cambio</label>
+      <textarea id="motivo-cuenta" name="motivo" required maxlength="1000" rows="4"></textarea>
+      <div class="paginacion"><button id="cancelar-cambio-cuenta" type="button" class="boton-secundario">Volver</button><button type="submit">Confirmar cambio</button></div>
+    </form>
+  </dialog>
 </body>
 </html>

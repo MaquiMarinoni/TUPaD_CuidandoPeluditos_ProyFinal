@@ -12,7 +12,7 @@ python -m flask --app backend.run:app db current --directory backend/migrations
 python -m flask --app backend.run:app db check --directory backend/migrations
 ```
 
-La revisión vigente es `d18a6c2f904b`; agrega el comentario de cierre de incidencias sin reemplazar las medidas registradas. La estructura contiene diez tablas de dominio y `alembic_version`, que registra la revisión aplicada. `db check` debe informar `No new upgrade operations detected.` cuando modelos y esquema coinciden.
+La revisión vigente es `e72a91c4b603`; agrega el historial de cambios administrativos de cuentas, después de `d18a6c2f904b` (comentario de cierre de incidencias). La estructura contiene once tablas de dominio y `alembic_version`, que registra la revisión aplicada. Los cambios anteriores a la auditoría no se reconstruyen. `db check` debe informar `No new upgrade operations detected.` cuando modelos y esquema coinciden.
 
 La creación de la base, la cuenta de desarrollo y la configuración se explican en la [guía local con MariaDB](../docs/ejecucion-local-mariadb.md). El [ejemplo de variables](../.env.example) no contiene credenciales reales.
 
@@ -25,7 +25,7 @@ INSERT IGNORE INTO roles (nombre) VALUES ('DUENO'), ('CUIDADOR'), ('ADMIN');
 SELECT id, nombre FROM roles;
 ```
 
-`seeds.sql` conserva la carga original con identificadores fijos para una base inicial. Para una base ya utilizada, el comando anterior carga por nombre sin reasignar identificadores. ADMIN se reserva para una extensión posterior; su existencia no implica un panel administrativo implementado.
+`seeds.sql` conserva la carga original con identificadores fijos para una base inicial. Para una base ya utilizada, el comando anterior carga por nombre sin reasignar identificadores. El panel ADMIN permite consultar cuentas y operaciones y activar/desactivar cuentas no administrativas, registrando motivo, fecha y responsable. Las cuentas ADMIN se aprovisionan por un procedimiento privado, no desde el registro público.
 
 ## SQL histórico de Entrega 2
 

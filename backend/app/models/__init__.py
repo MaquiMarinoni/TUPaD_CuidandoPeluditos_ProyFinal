@@ -8,6 +8,7 @@ from .solicitud import Solicitud, SolicitudMascota
 from .valoracion import Valoracion
 from .incidencia import Incidencia
 from .historial_estado import HistorialEstado
+from .auditoria_cuenta import AuditoriaCuenta
 
 
 @login_manager.user_loader
