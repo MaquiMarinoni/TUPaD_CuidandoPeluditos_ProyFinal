@@ -7,11 +7,15 @@
 **Grupo:** 176  
 **Integrantes:** Macarena Marinoni y Marianela Valletto  
 **Tutor:** Oscar Londero  
-**Actualización:** 17 de noviembre de 2026  
+**Actualización:** 18 de noviembre de 2026\
 **Aplicación:** https://cuidando-peluditos.onrender.com  
 **Repositorio:** https://github.com/MaquiMarinoni/TUPaD_CuidandoPeluditos_ProyFinal
 
-**Referencia de la versión comprobada:** código funcional `dce4785`; documentación y evidencias `7f8e372`; revisión de base de datos `e72a91c4b603`. Estos identificadores corresponden a la validación del 17/11/2026 y no sustituyen la comprobación del commit final al publicar la entrega.
+**Rama de entrega:** `main`. **Rama de despliegue en Render:** `deploy/render`.
+
+**Referencia etiquetada del cierre:** `v1.0.0-entrega-final`, commit `5cf2115` (18/11/2026). Las aclaraciones documentales posteriores se publican en ambas ramas sin mover esa etiqueta.
+
+**Referencia de validación:** código funcional `dce4785`; evidencias `7f8e372`; base de datos `e72a91c4b603`. La comprobación de producción corresponde al 17/11/2026.
 
 ---
 

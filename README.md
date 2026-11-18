@@ -22,7 +22,7 @@
 |---|---|
 | Aplicación web publicada | [Cuidando Peluditos — Render](https://cuidando-peluditos.onrender.com) |
 | Repositorio | [Cuidando Peluditos — GitHub](https://github.com/MaquiMarinoni/TUPaD_CuidandoPeluditos_ProyFinal) |
-| Informe final | [Informe Final — Grupo 176](docs/Informe_Final_Cuidando_Peluditos_G176.md) |
+| Informe final | [Informe Final — Grupo 176](docs/Informe_Final_Cuidando_Peluditos_G176.md) · [PDF](docs/Informe_Final_Cuidando_Peluditos_G176.pdf) |
 | Entrega 01 | [Propuesta y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md) |
 | Entrega 02 | [Diseño y modelo de datos](docs/Marinoni-Valletto_G176_Entrega02.md) |
 | Video de presentación | [Ver en Youtube](https://www.youtube.com/watch?v=GL2Dt9sBWgc)
@@ -30,7 +30,11 @@
 | Validación funcional inicial | [Validación del 12/11/2026](docs/validacion-final-2026-11-12.md) |
 | Validación de producción | [Validación del 17/11/2026](docs/validacion-produccion-2026-11-17.md) |
 
-**Rama utilizada para el despliegue:** `deploy/render`.
+**Rama de entrega y consulta del proyecto:** `main`.
+
+**Rama utilizada por Render para el despliegue:** `deploy/render`.
+
+**Referencia etiquetada del cierre:** `v1.0.0-entrega-final`, commit `5cf2115`. Las aclaraciones documentales posteriores se publican en ambas ramas, conservando esa etiqueta histórica.
 
 **Versión de referencia para el cierre funcional:** commit `7f8e372`. Las pruebas documentadas del 17/11 corresponden al código funcional desplegado mediante el commit `dce4785`.
 
@@ -579,10 +583,12 @@ La aplicación se encuentra publicada en Render y utiliza TiDB Cloud como base d
 
 El circuito funcional principal fue implementado y validado mediante pruebas automatizadas y recorridos manuales.
 
-**Estado de referencia al 17/11/2026:**
+**Estado de entrega al 18/11/2026:**
 
-- Rama: `deploy/render`.
-- Commit de referencia: `7f8e372`.
+- Rama de entrega: `main`.
+- Rama de despliegue en Render: `deploy/render`.
+- Referencia etiquetada del cierre: `v1.0.0-entrega-final` (`5cf2115`).
+- Documentación de pruebas de producción: `7f8e372`.
 - Código funcional desplegado y validado: `dce4785`.
 - Migración vigente: `e72a91c4b603`.
 - Pruebas automatizadas locales: 104 aprobadas.
