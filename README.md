@@ -25,7 +25,7 @@
 | Informe final | [Informe Final — Grupo 176](docs/Informe_Final_Cuidando_Peluditos_G176.md) |
 | Entrega 01 | [Propuesta y relevamiento UX](docs/Marinoni-Valletto_G176_Entrega01.md) |
 | Entrega 02 | [Diseño y modelo de datos](docs/Marinoni-Valletto_G176_Entrega02.md) |
-| Video de presentación | Pendiente de incorporar |
+| Video de presentación | [Ver en Youtube](https://www.youtube.com/watch?v=GL2Dt9sBWgc)
 | Guía de ejecución local | [Ejecución con MariaDB](docs/ejecucion-local-mariadb.md) |
 | Validación funcional inicial | [Validación del 12/11/2026](docs/validacion-final-2026-11-12.md) |
 | Validación de producción | [Validación del 17/11/2026](docs/validacion-produccion-2026-11-17.md) |

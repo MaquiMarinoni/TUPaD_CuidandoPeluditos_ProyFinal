@@ -276,5 +276,5 @@ La documentación final diferencia el diseño original, las decisiones implement
 - **Validación de producción:** `docs/validacion-produccion-2026-11-17.md` y `docs/evidencias/validacion-produccion-2026-11-17/`.
 - **Reglas y evidencias específicas:** `docs/auditoria-admin.md`, `docs/contactos-servicio.md` y `docs/regla-visitas-60-minutos.md`.
 - **Ejecución y migraciones:** `docs/ejecucion-local-mariadb.md`, `database/README.md` y `backend/migrations/`.
-- **Video de presentación:** enlace pendiente de incorporar y verificar.
+- **Video de presentación:** [Ver en Youtube](https://www.youtube.com/watch?v=GL2Dt9sBWgc)
 
